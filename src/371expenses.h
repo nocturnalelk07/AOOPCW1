@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2024/25)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: 2121292
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
@@ -21,7 +21,7 @@
 namespace App {
 
 // TODO: Enter your student number here!
-const std::string STUDENT_NUMBER = "987654";
+const std::string STUDENT_NUMBER = "2121292";
 
 // Enums (short for enumerations) are similar to their Java implementation. It
 // is a user-defined type, used to assign names to internal constants in code,
