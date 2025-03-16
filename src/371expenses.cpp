@@ -9,6 +9,8 @@
 
 #include "371expenses.h"
 #include "lib_cxxopts.hpp"
+#include <iostream>
+#include <cstring>
 
 // TODO Complete this function. You have been provided some skeleton code which
 //  retrieves the database file name from cxxopts.
@@ -150,6 +152,10 @@ cxxopts::Options App::cxxoptsSetup() {
 //  App::Action action = parseActionArgument(args);
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
   std::string input = args["action"].as<std::string>();
+  std::cout <<  "outputting: /n";
+  std::cout << input;
+  std::transform(input.begin(), input.end(), input.begin(), ::toupper);
+  std::cout << input;
   return Action::JSON;
 }
 
