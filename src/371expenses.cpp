@@ -152,11 +152,22 @@ cxxopts::Options App::cxxoptsSetup() {
 //  App::Action action = parseActionArgument(args);
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
   std::string input = args["action"].as<std::string>();
-  std::cout <<  "outputting: /n";
-  std::cout << input;
+  //uppers the input to be case insensitive
   std::transform(input.begin(), input.end(), input.begin(), ::toupper);
-  std::cout << input;
-  return Action::JSON;
+
+  if (input == "JSON") {
+    return Action::JSON;
+  } else if (input == "SUM") {
+    return Action::SUM;
+  }else if (input == "CREATE") {
+    return Action::CREATE;
+  }else if (input == "DELETE") {
+    return Action::DELETE;
+  }else if (input == "UPDATE") {
+    return Action::UPDATE;
+  }else {
+    throw std::invalid_argument("action");
+  }
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
