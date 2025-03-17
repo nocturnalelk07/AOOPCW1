@@ -141,7 +141,7 @@ cxxopts::Options App::cxxoptsSetup() {
   return cxxopts;
 }
 
-// TODO Rewrite this function so that it works. This function should
+// DONE Rewrite this function so that it works. This function should
 //  case-insensitively check the action argument retrieved from cxxopts and
 //  convert this to a value from the ACTION enum. If an invalid value is given
 //  in a string, throw an std::invalid_argument exception.

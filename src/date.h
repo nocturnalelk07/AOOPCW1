@@ -15,4 +15,15 @@
 #ifndef DATE_H
 #define DATE_H
 
+class date {
+public:
+    date();
+
+private:
+    int year;
+    int month;
+    int day;
+    const int yearAdjust = 1900;
+};
+
 #endif // DATE_H

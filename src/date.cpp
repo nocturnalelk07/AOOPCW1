@@ -8,11 +8,28 @@
 // -----------------------------------------------------
 
 #include "date.h"
+#include <ctime>
+#include <iostream>
+#include <cstring>
+
 
 // TODO write a default constructor that sets the member variables to today's
 // date. 
 // Example:
 //  Date d = Date();
+//default constructor for date
+date::date() {
+    //get todays date as a timestamp then turn it into a dateTime struct and get the values
+    time_t timestamp = time(&timestamp);
+    //gm time may result in some confusion outside this timezone but will make inputs more standardised than localtime worldwide
+    struct tm currentTime = *gmtime(&timestamp);
+
+    day = currentTime.tm_mday;
+    //months are represented as time since january (0-11) so adding one (1-12) is more human readable.
+    month = currentTime.tm_mon + 1;
+    //years are represented as time since 1900 so adding 1900 years gives the current year.
+    year = currentTime.tm_year + yearAdjust;
+}
 
 // TODO write a constructor that takes a three integer argument and sets the
 // appropriate member variables (year, month, day). If the date is not valid
