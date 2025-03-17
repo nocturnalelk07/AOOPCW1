@@ -9,11 +9,12 @@
 
 #include "date.h"
 #include <ctime>
+#include <string>
 #include <iostream>
-#include <cstring>
+#include <sstream>
 
 
-// TODO write a default constructor that sets the member variables to today's
+// TESTING write a default constructor that sets the member variables to today's
 // date. 
 // Example:
 //  Date d = Date();
@@ -24,11 +25,14 @@ date::date() {
     //gm time may result in some confusion outside this timezone but will make inputs more standardised than localtime worldwide
     struct tm currentTime = *gmtime(&timestamp);
 
-    day = currentTime.tm_mday;
+    currentDay = currentTime.tm_mday;
+    day = currentDay;
     //months are represented as time since january (0-11) so adding one (1-12) is more human readable.
-    month = currentTime.tm_mon + 1;
+    currentMonth = currentTime.tm_mon + 1;
+    month = currentMonth;
     //years are represented as time since 1900 so adding 1900 years gives the current year.
-    year = currentTime.tm_year + yearAdjust;
+    currentYear = currentTime.tm_year + yearAdjust;
+    year = currentYear;
 }
 
 // TODO write a constructor that takes a three integer argument and sets the
@@ -37,11 +41,78 @@ date::date() {
 // Example:
 //  Date d = Date("2024-12-25");
 
-// TODO write a constructor that takes a string argument in "YYYY-MM-DD" format
+date::date(int inputYear, int inputMonth, int inputDay) {
+    //TODO
+}
+// TESTING write a constructor that takes a string argument in "YYYY-MM-DD" format
 // and sets the appropriate member variables (year, month, day). If dateString
 // is not valid throw an appropriate exception.
 // Example:
 //  Date d = Date("2024-12-25");
+date::date(std::string date) {
+
+    time_t timestamp = time(&timestamp);
+    struct tm currentTime = *gmtime(&timestamp);
+
+    currentDay = currentTime.tm_mday;
+    currentMonth = currentTime.tm_mon + 1;
+    currentYear = currentTime.tm_year + yearAdjust;
+
+    year = NULL;
+    month = NULL;
+    day = NULL;
+    std::stringstream stringStream(date);
+    char delimiter = '-';
+    std::string tempS;
+    int tempI;
+
+    while(getline(stringStream, tempS, delimiter)) {
+        tempI = stoi(tempS);
+        //the year has to be more than or equal to the minimum year (1900) and no more than the current year
+        if (year == NULL && (tempI >= yearAdjust && tempI <= currentYear)) {
+            year = tempI;
+        //the minimum date is 1 as defined in the header file, this is relevant for months and days
+        } else if (month == NULL && (tempI >= minimumDate && tempI <= currentMonth)) {
+            month = tempI;
+        } else if (day == NULL && validDay(tempI, currentMonth, currentYear)) {
+            day = tempI;
+        } else {
+            throw std::invalid_argument("please input a valid date");
+        }
+    }
+}
+
+//this is a method to verify if a day is valid based on the month and year (for leap years) and also based on if the day has passed yet
+bool date::validDay(int day, int month, int year) {
+    //calculate how many days in the given month
+    int maxDays;
+    bool valid = true;
+    switch (month) {
+        case 2:
+        {
+            //for a given year to be a leap year, it must be divisible by 4 but not 100, or it must be divisible by 400.
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ) {
+                maxDays = 29;
+            } else {
+                maxDays = 28;
+            }
+        }
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+        {
+            maxDays = 31;
+        }
+        default:
+        maxDays = 30;
+    }
+    if (!(day <= maxDays)) {
+        valid = false;
+    }
+
+    if (month == currentMonth && day > currentDay) {
+        valid == false;
+    }
+    return valid;
+}
 
 // TODO Write a function, str, that takes no parameters and returns a
 // std::string representation of the Date object in YYYY-MM-DD format.  

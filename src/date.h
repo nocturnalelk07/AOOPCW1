@@ -15,15 +15,25 @@
 #ifndef DATE_H
 #define DATE_H
 
+#include <string>
+
 class date {
 public:
     date();
+    date(std::string date);
+    date(int inputYear, int inputMonth, int inputDay);
 
 private:
     int year;
     int month;
     int day;
+    int currentYear;
+    int currentDay;
+    int currentMonth;
+    const int minimumDate = 1;
     const int yearAdjust = 1900;
+
+    bool validDay(int day, int month, int year);
 };
 
 #endif // DATE_H
