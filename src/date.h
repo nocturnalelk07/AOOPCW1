@@ -22,6 +22,15 @@ public:
     date();
     date(std::string date);
     date(int inputYear, int inputMonth, int inputDay);
+    std::string str();
+    void setDate(int year, int month, int day);
+    int getYear();
+    int getMonth();
+    int getDay();
+
+
+    friend bool operator== (const date &lhs, const date &rhs);
+    friend bool operator< (const date &lhs, const date &rhs);
 
 private:
     int year;
@@ -32,8 +41,14 @@ private:
     int currentMonth;
     const int minimumDate = 1;
     const int yearAdjust = 1900;
+    const std::string yearError = "please make sure the year is valid";
+    const std::string monthError = "please make sure the month is valid";
+    const std::string dayError = "please make sure the month is valid";
+    const std::string inputError = "please input a valid date";
 
     bool validDay(int day, int month, int year);
+    bool validYear(int inputYear);
+    bool validMonth(int inputYear, int inputMonth);
 };
 
 #endif // DATE_H
