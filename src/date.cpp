@@ -82,9 +82,10 @@ date::date(std::string date) {
     currentMonth = currentTime.tm_mon + 1;
     currentYear = currentTime.tm_year + yearAdjust;
 
-    year = NULL;
-    month = NULL;
-    day = NULL;
+    //give empty values so we can tell when they have been changed later
+    year = 0;
+    month = 0;
+    day = 0;
     std::stringstream stringStream(date);
     char delimiter = '-';
     std::string tempS;
@@ -93,12 +94,12 @@ date::date(std::string date) {
     while(getline(stringStream, tempS, delimiter)) {
         tempI = stoi(tempS);
         //the year has to be more than or equal to the minimum year (1900) and no more than the current year
-        if (year == NULL && (validYear(tempI))) {
+        if (year == 0 && (validYear(tempI))) {
             year = tempI;
         //the minimum date is 1 as defined in the header file, this is relevant for months and days
-        } else if (month == NULL && validMonth(year, tempI)) {
+        } else if (month == 0 && validMonth(year, tempI)) {
             month = tempI;
-        } else if (day == NULL && validDay(tempI, month, year)) {
+        } else if (day == 0 && validDay(tempI, month, year)) {
             day = tempI;
         } else {
             throw std::invalid_argument(inputError);
@@ -134,7 +135,7 @@ bool date::validDay(int day, int month, int year) {
     }
 
     if (month == currentMonth && day > currentDay) {
-        valid == false;
+        valid = false;
     }
     return valid;
 }
