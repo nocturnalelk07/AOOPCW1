@@ -19,7 +19,7 @@
 // Example:
 //  Date d = Date();
 //default constructor for date
-date::date() {
+Date::Date() {
     //get todays date as a timestamp then turn it into a dateTime struct and get the values
     time_t timestamp = time(&timestamp);
     //gm time may result in some confusion outside this timezone but will make inputs more standardised than localtime worldwide
@@ -41,7 +41,7 @@ date::date() {
 // Example:
 //  Date d = Date("2024-12-25");
 
-date::date(int inputYear, int inputMonth, int inputDay) {
+Date::Date(int inputYear, int inputMonth, int inputDay) {
     
     time_t timestamp = time(&timestamp);
     struct tm currentTime = *gmtime(&timestamp);
@@ -73,7 +73,7 @@ date::date(int inputYear, int inputMonth, int inputDay) {
 // is not valid throw an appropriate exception.
 // Example:
 //  Date d = Date("2024-12-25");
-date::date(std::string date) {
+Date::Date(std::string date) {
 
     time_t timestamp = time(&timestamp);
     struct tm currentTime = *gmtime(&timestamp);
@@ -108,7 +108,7 @@ date::date(std::string date) {
 }
 
 //a set of methods that hold the logic for whether or not a day month or year is a valid input for the system so that it isnt repeated
-bool date::validDay(int day, int month, int year) {
+bool Date::validDay(int day, int month, int year) {
     //calculate how many days in the given month
     int maxDays;
     bool valid = true;
@@ -140,7 +140,7 @@ bool date::validDay(int day, int month, int year) {
     return valid;
 }
 
-bool date::validYear(int inputYear) {
+bool Date::validYear(int inputYear) {
     bool valid = false;
     if(inputYear >= yearAdjust && inputYear <= currentYear) {
         valid = true;
@@ -148,7 +148,7 @@ bool date::validYear(int inputYear) {
     return valid;
 }
 
-bool date::validMonth(int inputYear, int inputMonth) {
+bool Date::validMonth(int inputYear, int inputMonth) {
     bool valid = false;
     if (inputMonth >= minimumDate && (inputMonth <= currentMonth || inputYear < currentYear)) {
         valid = true;
@@ -161,7 +161,7 @@ bool date::validMonth(int inputYear, int inputMonth) {
 // Example:
 //  Date d = Date(2024,12,25);
 //  std::cout << d.str() << std::endl;
-std::string date::str() {
+std::string Date::str() {
     std::stringstream ss;
     ss << year << "-" << month << "-" << day;
     return(ss.str());
@@ -172,7 +172,7 @@ std::string date::str() {
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 12, 25);
-void date::setDate(int inputYear, int inputMonth, int inputDay) {
+void Date::setDate(int inputYear, int inputMonth, int inputDay) {
     if (!validYear(year)) {
         throw std::invalid_argument(yearError);
     } else if (!validMonth(year, month)) {
@@ -191,7 +191,7 @@ void date::setDate(int inputYear, int inputMonth, int inputDay) {
 // Example:
 //  Date d = Date();
 //  auto year = d.getYear();
-int date::getYear() {
+int Date::getYear() {
     return year;
 }
 
@@ -200,7 +200,7 @@ int date::getYear() {
 // Example:
 //  Date d = Date();
 //  auto month = d.getMonth();
-int date::getMonth() {
+int Date::getMonth() {
     return month;
 }
 
@@ -209,7 +209,7 @@ int date::getMonth() {
 // Example:
 //  Date d = Date();
 //  auto day = d.getDay();
-int date::getDay() {
+int Date::getDay() {
     return day;
 }
 
@@ -221,7 +221,7 @@ int date::getDay() {
 //  if (d1 == d2) {
 //    ...
 //  }
-bool operator== (const date &lhs, const date &rhs) {
+bool operator== (const Date &lhs, const Date &rhs) {
     bool isEqual = false;
     if((lhs.year == rhs.year) && (lhs.month == rhs.month) && (lhs.day == rhs.day)) {
         isEqual = true;
@@ -239,7 +239,7 @@ bool operator== (const date &lhs, const date &rhs) {
 //   if (d1 < d2) {
 //     ...
 //   }
-bool operator< (const date &lhs, const date &rhs) {
+bool operator< (const Date &lhs, const Date &rhs) {
     bool isLessThan = false;
 
     if(lhs.year == rhs.year) {

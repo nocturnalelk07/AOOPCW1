@@ -119,11 +119,11 @@ cxxopts::Options App::cxxoptsSetup() {
       "amount argument to the updated expense amount.",
       cxxopts::value<std::string>())(
 
-      "date",
-      "When creating or updating an expense item, set the date flag to change "
-      "the expense item's date to the one specified as an argument (e.g. "
-      "'2024-11-23'). If the date argument is ommitted set the expense date "
-      "to today's date when creating an expense item, and leave the date "
+      "Date",
+      "When creating or updating an expense item, set the Date flag to change "
+      "the expense item's Date to the one specified as an argument (e.g. "
+      "'2024-11-23'). If the Date argument is ommitted set the expense Date "
+      "to today's Date when creating an expense item, and leave the Date "
       "unchanged if omitted when updating an expense item.",
       cxxopts::value<std::string>())(
 

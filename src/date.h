@@ -17,11 +17,11 @@
 
 #include <string>
 
-class date {
+class Date {
 public:
-    date();
-    date(std::string date);
-    date(int inputYear, int inputMonth, int inputDay);
+    Date();
+    Date(std::string date);
+    Date(int inputYear, int inputMonth, int inputDay);
     std::string str();
     void setDate(int year, int month, int day);
     int getYear();
@@ -29,8 +29,8 @@ public:
     int getDay();
 
 
-    friend bool operator== (const date &lhs, const date &rhs);
-    friend bool operator< (const date &lhs, const date &rhs);
+    friend bool operator== (const Date &lhs, const Date &rhs);
+    friend bool operator< (const Date &lhs, const Date &rhs);
 
 private:
     int year;
