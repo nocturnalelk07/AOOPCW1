@@ -32,6 +32,7 @@ public:
     friend bool operator== (const Date &lhs, const Date &rhs);
     friend bool operator< (const Date &lhs, const Date &rhs);
 
+//(Private is default but helps for clarity to state it)
 private:
     unsigned int year;
     unsigned int month;
@@ -44,7 +45,7 @@ private:
     const unsigned int maximumMonth = 12;
     const std::string yearError = "please make sure the year is valid";
     const std::string monthError = "please make sure the month is valid";
-    const std::string dayError = "please make sure the month is valid";
+    const std::string dayError = "please make sure the day is valid";
     const std::string inputError = "please input a valid date";
 
     bool validDay(const unsigned int day, const unsigned int month, const unsigned int year);

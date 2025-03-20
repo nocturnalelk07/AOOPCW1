@@ -9,40 +9,71 @@
 
 #include "item.h"
 
-// TODO Write a constructor that takes four parameters, a string identifier,
+#include <stdexcept>
+#include <iostream>
+
+// TESTING Write a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
+Item::Item(std::string inputIdentifier, std::string inputDescription, double inputAmount, Date inputDate) {
+    std::cout << "in item constructor";
+    identifier = inputIdentifier;
+    description = inputDescription;
+    amount = inputAmount;
+    auto date = inputDate;
+}
 
-// TODO Write a function, getIdent, that returns the identifier for the Item.
+// TESTING Write a function, getIdent, that returns the identifier for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getIdent();
+std::string Item::getIdent() {
+    return identifier;
+}
 
-// TODO Write a function, getDescription, that returns the description for the Item.
+// TESTING Write a function, getDescription, that returns the description for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
+std::string Item::getDescription() {
+    return description;
+}
 
-// TODO Write a function, setDescription, that takes one parameter, a string for a new
+// TESTING Write a function, setDescription, that takes one parameter, a string for a new
 //  Item description, and updates the member variable. It returns nothing.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
+void Item::setDescription(std::string inputDescription) {
+    description = inputDescription;
+}
 
-// TODO Write a function, addTag, that takes one parameters, a tag
+// TESTING Write a function, addTag, that takes one parameters, a tag
 //  string and returns true if the entry was inserted into the
 //  container or false if the tag already existed.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
+bool Item::addTag(std::string inputTag) {
 
-// TODO Write a function, deleteTag, that takes one parameter, a tag
+    for (int i = 0; i < (int) tags.size(); i++) {
+        if (tags[i] == inputTag) {
+            //find the tag so return
+            return false;
+        }
+    }
+
+    tags.push_back(inputTag);
+    return true;
+}
+
+// TESTING Write a function, deleteTag, that takes one parameter, a tag
 // string, deletes it from the container, and returns true if the tag
 // string was deleted. If no tag exists with that name, throw an appropriate
 // exception.
@@ -51,33 +82,67 @@
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
+bool Item::deleteTag(std::string inputTag) {
 
-// TODO Write a function, numTags, that takes no parameters and returns an
+    for (int i = 0; i < (int) tags.size(); i++) {
+        if (tags[i] == inputTag) {
+            tags.erase(tags.begin() + i);
+            return true;
+        }
+    }
+    throw std::out_of_range(tagNotFoundError);
+}
+
+// TESTING Write a function, numTags, that takes no parameters and returns an
 // unsigned int of the number of tags in the Item contains.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
+unsigned int Item::numTags() {
+    return tags.size();
+}
 
-// TODO Write a function, containsTag, that takes one parameter, a tag string.
+// TESTING Write a function, containsTag, that takes one parameter, a tag string.
 // If the tag exists, return true. Otherwise return false.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
+bool Item::containsTag(std::string inputTag) {
 
-// TODO Write a function, getAmount, that returns the amount for the Item.
+    for (int i = 0; i < (int) tags.size(); i++) {
+        if (tags[i] == inputTag) {
+            return true;
+        }
+    }
+    return false;
+}
 
-// TODO Write a function setAmount, that takes one parameter, a double for
+// TESTING Write a function, getAmount, that returns the amount for the Item.
+double Item::getAmount() {
+    return amount;
+}
+
+// TESTING Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
+void Item::setAmount(float inputAmount) {
+    amount = inputAmount;
+}
 
-// TODO Write a function, getDate, that returns the date for the Item.
+// TESTING Write a function, getDate, that returns the date for the Item.
+Date Item::getDate() {
+    return date;
+}
 
-// TODO Write a function setDate, that takes one parameter, a date, and updates
+// TESTING Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
+void Item::setDate(Date inputDate) {
+    auto date = inputDate;
+}
 
-// TODO Write an == operator overload for the Item class, such that two
+// TESTING Write an == operator overload for the Item class, such that two
 // Item objects are equal only if they have the same identifier, date,
 // amount, description, and tags.
 // Example:
@@ -86,6 +151,18 @@
 //  if(iObj1 == iObj2) {
 //   ...
 //  }
+bool operator== (const Item &lhs, const Item &rhs) {
+    bool isEqual = false;
+    if((lhs.identifier == rhs.identifier)
+         && (lhs.description == rhs.description)
+         && (lhs.amount == rhs.amount)
+         && (lhs.date == rhs.date)
+         && (lhs.tags == rhs.tags)) {
+            isEqual = true;
+    }
+
+    return isEqual;
+}
 
 // TODO Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Item.
@@ -93,3 +170,9 @@
 // Example:
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
+std::string Item::str() {
+    std::string JSONString;
+
+
+    return JSONString;
+}

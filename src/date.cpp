@@ -14,7 +14,7 @@
 #include <sstream>
 
 
-// TESTING write a default constructor that sets the member variables to today's
+// DONE write a default constructor that sets the member variables to today's
 // date. 
 // Example:
 //  Date d = Date();
@@ -26,7 +26,7 @@ Date::Date() {
     year = currentYear;
 }
 
-// TESTING write a constructor that takes a three integer argument and sets the
+// DONE write a constructor that takes a three integer argument and sets the
 // appropriate member variables (year, month, day). If the date is not valid
 // throw an appropriate exception.
 // Example:
@@ -54,7 +54,7 @@ Date::Date(const unsigned int inputYear, const unsigned int inputMonth, const un
     }
 }
 
-// TESTING write a constructor that takes a string argument in "YYYY-MM-DD" format
+// DONE write a constructor that takes a string argument in "YYYY-MM-DD" format
 // and sets the appropriate member variables (year, month, day). If dateString
 // is not valid throw an appropriate exception.
 // Example:
@@ -108,16 +108,20 @@ bool Date::validDay(const unsigned int day, const unsigned int month, const unsi
             //for a given year to be a leap year, it must be divisible by 4 but not 100, or it must be divisible by 400.
             if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ) {
                 maxDays = 29;
+                break;
             } else {
                 maxDays = 28;
+                break;
             }
         }
         case 1: case 3: case 5: case 7: case 8: case 10: case 12:
         {
             maxDays = 31;
+            break;
         }
         default:
         maxDays = 30;
+        break;
     }
     if (!(day <= maxDays)) {
         valid = false;
@@ -164,7 +168,7 @@ void Date::updateCurrentDate() {
     currentYear = currentTime.tm_year + yearAdjust;
 }
 
-// TESTING Write a function, str, that takes no parameters and returns a
+// DONE Write a function, str, that takes no parameters and returns a
 // std::string representation of the Date object in YYYY-MM-DD format.  
 // Example:
 //  Date d = Date(2024,12,25);
@@ -175,7 +179,7 @@ std::string Date::str() const {
     return(ss.str());
 }
 
-// TODO create a function setDate, that takes three parameters: year, month,
+// DONE create a function setDate, that takes three parameters: year, month,
 // day and sets the appropriate member variables to those parameters.
 // Example:
 //  Date d = Date();
@@ -194,7 +198,7 @@ void Date::setDate(const unsigned int inputYear, const unsigned int inputMonth, 
     }
 }
 
-// TESTING Write a function, getYear, that takes no parameters and returns year
+// DONE Write a function, getYear, that takes no parameters and returns year
 // member variable
 // Example:
 //  Date d = Date();
@@ -203,7 +207,7 @@ unsigned int Date::getYear() const {
     return year;
 }
 
-// TESTING Write a function, getMonth, that takes no parameters and returns month
+// DONE Write a function, getMonth, that takes no parameters and returns month
 // member variable
 // Example:
 //  Date d = Date();
@@ -212,7 +216,7 @@ unsigned int Date::getMonth() const {
     return month;
 }
 
-// TESTING Write a function, getDay, that takes no parameters and returns day
+// DONE Write a function, getDay, that takes no parameters and returns day
 // member variable
 // Example:
 //  Date d = Date();
@@ -221,7 +225,7 @@ unsigned int Date::getDay() const {
     return day;
 }
 
-// TESTING Write an == operator overload for the Date class, such that two
+// DONE Write an == operator overload for the Date class, such that two
 // Date objects are equal only if they have the same member variables.
 // Example:
 //  Date d1 = Date(2024, 12, 25);
@@ -237,7 +241,7 @@ bool operator== (const Date &lhs, const Date &rhs) {
     return isEqual;
 }
 
-// TESTING Write an < operator overload for the Date class, that returns true if
+// DONE Write an < operator overload for the Date class, that returns true if
 // the first Date object is chronologically before the second date object.
 // Otherwise return false. 
 // Example:
