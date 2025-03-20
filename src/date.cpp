@@ -20,18 +20,9 @@
 //  Date d = Date();
 //default constructor for date
 Date::Date() {
-    //get todays date as a timestamp then turn it into a dateTime struct and get the values
-    time_t timestamp = time(&timestamp);
-    //gm time may result in some confusion outside this timezone but will make inputs more standardised than localtime worldwide
-    struct tm currentTime = *gmtime(&timestamp);
-
-    currentDay = currentTime.tm_mday;
+    updateCurrentDate();
     day = currentDay;
-    //months are represented as time since january (0-11) so adding one (1-12) is more human readable.
-    currentMonth = currentTime.tm_mon + 1;
     month = currentMonth;
-    //years are represented as time since 1900 so adding 1900 years gives the current year.
-    currentYear = currentTime.tm_year + yearAdjust;
     year = currentYear;
 }
 
@@ -41,14 +32,9 @@ Date::Date() {
 // Example:
 //  Date d = Date("2024-12-25");
 
-Date::Date(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay) {
+Date::Date(const unsigned int inputYear, const unsigned int inputMonth, const unsigned int inputDay) {
     
-    time_t timestamp = time(&timestamp);
-    struct tm currentTime = *gmtime(&timestamp);
-
-    currentDay = currentTime.tm_mday;
-    currentMonth = currentTime.tm_mon + 1;
-    currentYear = currentTime.tm_year + yearAdjust;
+    updateCurrentDate();
 
     //verify and set the year month and day
     if (validYear(inputYear)) {
@@ -73,14 +59,9 @@ Date::Date(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDa
 // is not valid throw an appropriate exception.
 // Example:
 //  Date d = Date("2024-12-25");
-Date::Date(std::string date) {
+Date::Date(const std::string date) {
 
-    time_t timestamp = time(&timestamp);
-    struct tm currentTime = *gmtime(&timestamp);
-
-    currentDay = currentTime.tm_mday;
-    currentMonth = currentTime.tm_mon + 1;
-    currentYear = currentTime.tm_year + yearAdjust;
+    updateCurrentDate();
 
     unsigned int tempYear;
     unsigned int tempMonth;
@@ -114,7 +95,9 @@ Date::Date(std::string date) {
 }
 
 //a set of methods that hold the logic for whether or not a day month or year is a valid input for the system so that it isnt repeated
-bool Date::validDay(unsigned int day, unsigned int month, unsigned int year) {
+bool Date::validDay(const unsigned int day, const unsigned int month, const unsigned int year) {
+    updateCurrentDate();
+
     //calculate how many days in the given month
     unsigned int maxDays;
     bool valid = true;
@@ -146,7 +129,8 @@ bool Date::validDay(unsigned int day, unsigned int month, unsigned int year) {
     return valid;
 }
 
-bool Date::validYear(unsigned int inputYear) {
+bool Date::validYear(const unsigned int inputYear) {
+    updateCurrentDate();
     bool valid = false;
     if(inputYear >= yearAdjust && inputYear <= currentYear) {
         valid = true;
@@ -154,7 +138,8 @@ bool Date::validYear(unsigned int inputYear) {
     return valid;
 }
 
-bool Date::validMonth(unsigned int inputYear, unsigned int inputMonth) {
+bool Date::validMonth(const unsigned int inputYear, const unsigned int inputMonth) {
+    updateCurrentDate();
     bool valid = false;
     if ((inputMonth >= minimumDate) && (inputMonth <= maximumMonth) && (inputMonth <= currentMonth || inputYear < currentYear)) {
         valid = true;
@@ -162,12 +147,29 @@ bool Date::validMonth(unsigned int inputYear, unsigned int inputMonth) {
     return valid;
 }
 
+void Date::updateCurrentDate() {
+    //get todays date as a timestamp then turn it into a dateTime struct and get the values
+    time_t timestamp = time(&timestamp);
+
+    //gm time may result in some confusion outside this timezone but will make inputs more standardised than localtime worldwide
+    struct tm currentTime = *gmtime(&timestamp);
+
+
+    currentDay = currentTime.tm_mday;
+
+    //months are represented as time since january (0-11) so adding one (1-12) is more human readable.
+    currentMonth = currentTime.tm_mon + 1;
+
+    //years are represented as time since 1900 so adding 1900 years gives the current year.
+    currentYear = currentTime.tm_year + yearAdjust;
+}
+
 // TESTING Write a function, str, that takes no parameters and returns a
 // std::string representation of the Date object in YYYY-MM-DD format.  
 // Example:
 //  Date d = Date(2024,12,25);
 //  std::cout << d.str() << std::endl;
-std::string Date::str() {
+std::string Date::str() const {
     std::stringstream ss;
     ss << year << "-" << month << "-" << day;
     return(ss.str());
@@ -178,7 +180,7 @@ std::string Date::str() {
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 12, 25);
-void Date::setDate(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay) {
+void Date::setDate(const unsigned int inputYear, const unsigned int inputMonth, const unsigned int inputDay) {
     if (!validYear(year)) {
         throw std::invalid_argument(yearError);
     } else if (!validMonth(year, month)) {
@@ -197,7 +199,7 @@ void Date::setDate(unsigned int inputYear, unsigned int inputMonth, unsigned int
 // Example:
 //  Date d = Date();
 //  auto year = d.getYear();
-unsigned int Date::getYear() {
+unsigned int Date::getYear() const {
     return year;
 }
 
@@ -206,7 +208,7 @@ unsigned int Date::getYear() {
 // Example:
 //  Date d = Date();
 //  auto month = d.getMonth();
-unsigned int Date::getMonth() {
+unsigned int Date::getMonth() const {
     return month;
 }
 
@@ -215,7 +217,7 @@ unsigned int Date::getMonth() {
 // Example:
 //  Date d = Date();
 //  auto day = d.getDay();
-unsigned int Date::getDay() {
+unsigned int Date::getDay() const {
     return day;
 }
 

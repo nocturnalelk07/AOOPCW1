@@ -20,13 +20,13 @@
 class Date {
 public:
     Date();
-    Date(std::string date);
-    Date(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay);
-    std::string str();
-    void setDate(unsigned int year, unsigned int month, unsigned int day);
-    unsigned int getYear();
-    unsigned int getMonth();
-    unsigned int getDay();
+    Date(const std::string date);
+    Date(const unsigned int inputYear, const unsigned int inputMonth, const unsigned int inputDay);
+    std::string str() const;
+    void setDate(const unsigned int year, const unsigned int month, const unsigned int day);
+    unsigned int getYear() const;
+    unsigned int getMonth() const;
+    unsigned int getDay() const;
 
 
     friend bool operator== (const Date &lhs, const Date &rhs);
@@ -47,9 +47,10 @@ private:
     const std::string dayError = "please make sure the month is valid";
     const std::string inputError = "please input a valid date";
 
-    bool validDay(unsigned int day, unsigned int month, unsigned int year);
-    bool validYear(unsigned int inputYear);
-    bool validMonth(unsigned int inputYear, unsigned int inputMonth);
+    bool validDay(const unsigned int day, const unsigned int month, const unsigned int year);
+    bool validYear(const unsigned int inputYear);
+    bool validMonth( const unsigned int inputYear, const unsigned int inputMonth);
+    void updateCurrentDate();
 };
 
 #endif // DATE_H
