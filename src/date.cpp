@@ -41,7 +41,7 @@ Date::Date() {
 // Example:
 //  Date d = Date("2024-12-25");
 
-Date::Date(int inputYear, int inputMonth, int inputDay) {
+Date::Date(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay) {
     
     time_t timestamp = time(&timestamp);
     struct tm currentTime = *gmtime(&timestamp);
@@ -82,35 +82,41 @@ Date::Date(std::string date) {
     currentMonth = currentTime.tm_mon + 1;
     currentYear = currentTime.tm_year + yearAdjust;
 
-    //give empty values so we can tell when they have been changed later
-    year = 0;
-    month = 0;
-    day = 0;
+    unsigned int tempYear;
+    unsigned int tempMonth;
+    unsigned int tempDay;
+
     std::stringstream stringStream(date);
     char delimiter = '-';
     std::string tempS;
-    int tempI;
-
-    while(getline(stringStream, tempS, delimiter)) {
-        tempI = stoi(tempS);
-        //the year has to be more than or equal to the minimum year (1900) and no more than the current year
-        if (year == 0 && (validYear(tempI))) {
-            year = tempI;
-        //the minimum date is 1 as defined in the header file, this is relevant for months and days
-        } else if (month == 0 && validMonth(year, tempI)) {
-            month = tempI;
-        } else if (day == 0 && validDay(tempI, month, year)) {
-            day = tempI;
-        } else {
-            throw std::invalid_argument(inputError);
-        }
+    
+    getline(stringStream, tempS, delimiter);
+    tempYear = stoi(tempS);
+    if (validYear(tempYear)) {
+        year = tempYear;
+    } else {
+        throw std::invalid_argument(yearError);
+    }
+    getline(stringStream, tempS, delimiter);
+    tempMonth = stoi(tempS);
+    if (validMonth(tempYear, tempMonth)) {
+        month = tempMonth;
+    } else {
+        throw std::invalid_argument(monthError);
+    }
+    getline(stringStream, tempS, delimiter);
+    tempDay = stoi(tempS);
+    if (validDay(tempDay, tempMonth, tempYear)) {
+        day = tempDay;
+    } else {
+        throw std::invalid_argument(dayError);
     }
 }
 
 //a set of methods that hold the logic for whether or not a day month or year is a valid input for the system so that it isnt repeated
-bool Date::validDay(int day, int month, int year) {
+bool Date::validDay(unsigned int day, unsigned int month, unsigned int year) {
     //calculate how many days in the given month
-    int maxDays;
+    unsigned int maxDays;
     bool valid = true;
     //works out how many days the month has
     switch (month) {
@@ -140,7 +146,7 @@ bool Date::validDay(int day, int month, int year) {
     return valid;
 }
 
-bool Date::validYear(int inputYear) {
+bool Date::validYear(unsigned int inputYear) {
     bool valid = false;
     if(inputYear >= yearAdjust && inputYear <= currentYear) {
         valid = true;
@@ -148,9 +154,9 @@ bool Date::validYear(int inputYear) {
     return valid;
 }
 
-bool Date::validMonth(int inputYear, int inputMonth) {
+bool Date::validMonth(unsigned int inputYear, unsigned int inputMonth) {
     bool valid = false;
-    if (inputMonth >= minimumDate && (inputMonth <= currentMonth || inputYear < currentYear)) {
+    if ((inputMonth >= minimumDate) && (inputMonth <= maximumMonth) && (inputMonth <= currentMonth || inputYear < currentYear)) {
         valid = true;
     }
     return valid;
@@ -172,7 +178,7 @@ std::string Date::str() {
 // Example:
 //  Date d = Date();
 //  d.setDate(2024, 12, 25);
-void Date::setDate(int inputYear, int inputMonth, int inputDay) {
+void Date::setDate(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay) {
     if (!validYear(year)) {
         throw std::invalid_argument(yearError);
     } else if (!validMonth(year, month)) {
@@ -191,7 +197,7 @@ void Date::setDate(int inputYear, int inputMonth, int inputDay) {
 // Example:
 //  Date d = Date();
 //  auto year = d.getYear();
-int Date::getYear() {
+unsigned int Date::getYear() {
     return year;
 }
 
@@ -200,7 +206,7 @@ int Date::getYear() {
 // Example:
 //  Date d = Date();
 //  auto month = d.getMonth();
-int Date::getMonth() {
+unsigned int Date::getMonth() {
     return month;
 }
 
@@ -209,7 +215,7 @@ int Date::getMonth() {
 // Example:
 //  Date d = Date();
 //  auto day = d.getDay();
-int Date::getDay() {
+unsigned int Date::getDay() {
     return day;
 }
 
@@ -241,7 +247,6 @@ bool operator== (const Date &lhs, const Date &rhs) {
 //   }
 bool operator< (const Date &lhs, const Date &rhs) {
     bool isLessThan = false;
-
     if(lhs.year == rhs.year) {
 
         //if the years are equal we need to check the months
@@ -250,6 +255,9 @@ bool operator< (const Date &lhs, const Date &rhs) {
             //if the months are equal we need to check the days
             if(lhs.day >= rhs.day) {
                 //do nothing because date is equal or more than
+            } else {
+                //if not equal or more than then day is less
+                isLessThan = true;
             }
 
         //if the months aren't equal, check if lhs is less    
@@ -261,6 +269,5 @@ bool operator< (const Date &lhs, const Date &rhs) {
     } else if (lhs.year < rhs.year) {
         isLessThan = true;
     } // else do nothing
-
     return isLessThan;
 }

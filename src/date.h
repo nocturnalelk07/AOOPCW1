@@ -21,34 +21,35 @@ class Date {
 public:
     Date();
     Date(std::string date);
-    Date(int inputYear, int inputMonth, int inputDay);
+    Date(unsigned int inputYear, unsigned int inputMonth, unsigned int inputDay);
     std::string str();
-    void setDate(int year, int month, int day);
-    int getYear();
-    int getMonth();
-    int getDay();
+    void setDate(unsigned int year, unsigned int month, unsigned int day);
+    unsigned int getYear();
+    unsigned int getMonth();
+    unsigned int getDay();
 
 
     friend bool operator== (const Date &lhs, const Date &rhs);
     friend bool operator< (const Date &lhs, const Date &rhs);
 
 private:
-    int year;
-    int month;
-    int day;
-    int currentYear;
-    int currentDay;
-    int currentMonth;
-    const int minimumDate = 1;
-    const int yearAdjust = 1900;
+    unsigned int year;
+    unsigned int month;
+    unsigned int day;
+    unsigned int currentYear;
+    unsigned int currentDay;
+    unsigned int currentMonth;
+    const unsigned int minimumDate = 1;
+    const unsigned int yearAdjust = 1900;
+    const unsigned int maximumMonth = 12;
     const std::string yearError = "please make sure the year is valid";
     const std::string monthError = "please make sure the month is valid";
     const std::string dayError = "please make sure the month is valid";
     const std::string inputError = "please input a valid date";
 
-    bool validDay(int day, int month, int year);
-    bool validYear(int inputYear);
-    bool validMonth(int inputYear, int inputMonth);
+    bool validDay(unsigned int day, unsigned int month, unsigned int year);
+    bool validYear(unsigned int inputYear);
+    bool validMonth(unsigned int inputYear, unsigned int inputMonth);
 };
 
 #endif // DATE_H
