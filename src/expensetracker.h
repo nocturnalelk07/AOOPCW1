@@ -15,6 +15,11 @@
 #define EXPENSETRACKER_H
 
 class ExpenseTracker {
+public:
+    ExpenseTracker();
+    unsigned int size();
+
+private:
 
 };
 

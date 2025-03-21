@@ -24,15 +24,15 @@ static const std::string runtimeError = "category error at runtime";
 
 class Category {
 public:
-    Category(std::string ident);
-    unsigned int size();
-    std::string getIdent();
-    void setIdent(std::string ident);
-    Item newItem(std::string itemIdent, std::string desc, double amount, Date date);
+    Category(const std::string ident);
+    unsigned int size() const;
+    std::string getIdent() const;
+    void setIdent(const std::string ident);
+    Item newItem(const std::string itemIdent, const std::string desc, const double amount, const Date date);
     bool addItem(Item& item);
-    Item getItem(std::string ident);
+    Item getItem(const std::string ident) const;
     double getSum();
-    bool deleteItem(std::string ident);
+    bool deleteItem(const std::string ident);
     std::string str();
 
     friend bool operator== (const Category &lhs, const Category &rhs);

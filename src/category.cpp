@@ -9,7 +9,7 @@
 
 #include "category.h"
 
-// TESTING Write a constructor that takes one parameter, a string identifier and
+// DONE Write a constructor that takes one parameter, a string identifier and
 // initialises the object and member data.
 //
 // Example:
@@ -18,26 +18,26 @@ Category::Category(std::string ident) {
     identifier = ident;
 }
 
-// TESTING Write a function, size, that takes no parameters and returns an unsigned
+// DONE Write a function, size, that takes no parameters and returns an unsigned
 // int of the number of Items in the Category contains.
 //
 // Example:
 //  Category c{"categoryIdent"};
 //  auto size = c.size();
-unsigned int Category::size() {
+unsigned int Category::size() const {
     return items.size();
 }
 
-// TESTING Write a function, getIdent, that returns the identifier for the Category.
+// DONE Write a function, getIdent, that returns the identifier for the Category.
 //
 // Example:
 //  Category cObj{"categoryIdent"};
 //  auto ident = cObj.getIdent();
-std::string Category::getIdent() {
+std::string Category::getIdent() const {
     return identifier;
 }
 
-// TESTING Write a function, setIdent, that takes one parameter, a string for a new
+// DONE Write a function, setIdent, that takes one parameter, a string for a new
 // Category identifier, and updates the member variable. It returns nothing.
 //
 // Example:
@@ -47,7 +47,7 @@ void Category::setIdent(std::string ident) {
     identifier = ident;
 }
 
-// TESTING Write a function, newItem, that takes four parameters, an Item
+// DONE Write a function, newItem, that takes four parameters, an Item
 // identifier (string), description (string), amount (double), and date (Date)
 // and returns the Item object as a reference.  If an object with the same
 // identifier already exists, then the existing object should be overwritten by
@@ -69,7 +69,7 @@ Item Category::newItem(std::string ident, std::string description, double amount
     throw std::runtime_error(runtimeError);
 }
 
-// TESTING Write a function, addItem, that takes one parameter, an Item object, and
+// DONE Write a function, addItem, that takes one parameter, an Item object, and
 // returns true if the object was successfully inserted. If an object with the
 // same identifier already exists, then:
 //  - the tags should be merged
@@ -100,7 +100,7 @@ bool Category::addItem(Item& item) {
     return true;
 }
 
-// TESTING Write a function, getItem, that takes one parameter, an Item identifier
+// DONE Write a function, getItem, that takes one parameter, an Item identifier
 // (a string) and returns the Item as a reference. If no Item exists, throw an
 // appropriate exception.
 //
@@ -110,7 +110,7 @@ bool Category::addItem(Item& item) {
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 //  auto iObj = cObj.getItem("newItemName");
-Item Category::getItem(std::string identifier) {
+Item Category::getItem(const std::string identifier) const {
     for (int i = 0; i < (int) items.size(); i++) {
         if (identifier == items[i].getIdent()) {
             return items[i];
@@ -119,7 +119,7 @@ Item Category::getItem(std::string identifier) {
     throw std::out_of_range(runtimeError);
 }
 
-// TESTING Write a function, getSum, that returns the sum of all Item amounts in
+// DONE Write a function, getSum, that returns the sum of all Item amounts in
 // the category. If no Item exists return 0.
 //
 // Example:
@@ -136,7 +136,7 @@ double Category::getSum() {
     return sum;
 }
 
-// TESTING Write a function, deleteItem, that takes one parameter, an Item
+// DONE Write a function, deleteItem, that takes one parameter, an Item
 // identifier (a string), deletes the item with that identifier from the
 // container, and returns true if the Item was deleted. If no Item exists, throw
 // an appropriate exception.
@@ -155,7 +155,7 @@ bool Category::deleteItem(std::string identifier) {
     throw std::out_of_range(runtimeError);
 }
 
-// TESTING Write an == operator overload for the Category class, such that two
+// DONE Write an == operator overload for the Category class, such that two
 // Category objects are equal only if they have the same identifier and same
 // Items.
 //
@@ -173,7 +173,7 @@ bool operator== (const Category &lhs, const Category &rhs) {
     return false;
 }
 
-// TESTING Write a function, str, that takes no parameters and returns a
+// DONE Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.
 //
 // See the coursework specification for how this JSON should look.
@@ -188,10 +188,12 @@ std::string Category::str() {
     return j;
 }
 
+//converts to json
 void Category::to_json(json& j) {
     j = json{{"items", itemString()}};
 }
 
+//formats items vector as json
 std::string Category::itemString() {
     std::stringstream ss;
     ss << "{";
