@@ -17,22 +17,26 @@
 #include <string>
 #include <vector>
 #include "date.h"
+#include "lib_json.hpp"
+
+using json = nlohmann::json;
 
 class Item {
 public:
     Item(std::string identifier, std::string description, double amount, Date date);
-    std::string getIdent();
-    std::string getDescription();
-    void setDescription(std::string description);
-    bool addTag(std::string tag);
-    bool deleteTag(std::string tag);
-    unsigned int numTags();
-    bool containsTag(std::string tag);
-    double getAmount();
-    void setAmount(float amount);
-    Date getDate();
-    void setDate(Date date);
+    std::string getIdent() const;
+    std::string getDescription() const;
+    void setDescription(const std::string description);
+    bool addTag(const std::string tag);
+    bool deleteTag(const std::string tag);
+    unsigned int numTags() const;
+    bool containsTag(const std::string tag) const;
+    double getAmount() const;
+    void setAmount(const float amount);
+    Date getDate() const;
+    void setDate(const Date date);
     std::string str();
+    std::string tagString() const;
 
     friend bool operator== (const Item &lhs, const Item &rhs);
 
@@ -44,6 +48,8 @@ private:
     Date date;
     std::vector<std::string> tags;
     const std::string tagNotFoundError = "Error: tag was not found";
+
+    void to_json(json& json);
 
 };
 #endif // ITEM_H

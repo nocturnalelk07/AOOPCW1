@@ -9,8 +9,12 @@
 
 #include "item.h"
 
+#include "lib_json.hpp"
+using json = nlohmann::json;
+
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
 
 // TESTING Write a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
@@ -30,7 +34,7 @@ Item::Item(std::string inputIdentifier, std::string inputDescription, double inp
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getIdent();
-std::string Item::getIdent() {
+std::string Item::getIdent() const {
     return identifier;
 }
 
@@ -39,7 +43,7 @@ std::string Item::getIdent() {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
-std::string Item::getDescription() {
+std::string Item::getDescription() const {
     return description;
 }
 
@@ -49,7 +53,7 @@ std::string Item::getDescription() {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
-void Item::setDescription(std::string inputDescription) {
+void Item::setDescription(const std::string inputDescription) {
     description = inputDescription;
 }
 
@@ -60,7 +64,7 @@ void Item::setDescription(std::string inputDescription) {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
-bool Item::addTag(std::string inputTag) {
+bool Item::addTag(const std::string inputTag) {
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -82,7 +86,7 @@ bool Item::addTag(std::string inputTag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
-bool Item::deleteTag(std::string inputTag) {
+bool Item::deleteTag(const std::string inputTag) {
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -99,7 +103,7 @@ bool Item::deleteTag(std::string inputTag) {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
-unsigned int Item::numTags() {
+unsigned int Item::numTags() const {
     return tags.size();
 }
 
@@ -110,7 +114,7 @@ unsigned int Item::numTags() {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
-bool Item::containsTag(std::string inputTag) {
+bool Item::containsTag(const std::string inputTag) const {
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -121,7 +125,7 @@ bool Item::containsTag(std::string inputTag) {
 }
 
 // TESTING Write a function, getAmount, that returns the amount for the Item.
-double Item::getAmount() {
+double Item::getAmount() const {
     return amount;
 }
 
@@ -132,13 +136,13 @@ void Item::setAmount(float inputAmount) {
 }
 
 // TESTING Write a function, getDate, that returns the date for the Item.
-Date Item::getDate() {
+Date Item::getDate() const {
     return date;
 }
 
 // TESTING Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
-void Item::setDate(Date inputDate) {
+void Item::setDate(const Date inputDate) {
     auto date = inputDate;
 }
 
@@ -171,8 +175,28 @@ bool operator== (const Item &lhs, const Item &rhs) {
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
 std::string Item::str() {
-    std::string JSONString;
+    json j;
+    to_json(j);
+    
+    return j;
+}
 
+void Item::to_json(json& j) {
+    j = json{{"identifier", identifier}, {"amount", amount}, 
+    {"date", date.str()}, {"description", description}, {"tags", tagString()}};
+}
 
-    return JSONString;
+//returns the items tags as a string for json representation
+std::string Item::tagString() const {
+    std::stringstream ss;
+    ss << "[";
+    for (int i = 0; i < tags.size(); i++) {
+        ss << "\"" << tags[i] << "\"";
+        if (i == tags.size()-1 /**if this will be the last loop*/) {
+            ss << "]";
+        } else {
+            ss << ",";
+        }
+    }
+    return ss.str();
 }
