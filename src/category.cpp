@@ -9,33 +9,45 @@
 
 #include "category.h"
 
-// TODO Write a constructor that takes one parameter, a string identifier and
+// TESTING Write a constructor that takes one parameter, a string identifier and
 // initialises the object and member data.
 //
 // Example:
 //  Category c{"categoryIdent"};
+Category::Category(std::string ident) {
+    identifier = ident;
+}
 
-// TODO Write a function, size, that takes no parameters and returns an unsigned
+// TESTING Write a function, size, that takes no parameters and returns an unsigned
 // int of the number of Items in the Category contains.
 //
 // Example:
 //  Category c{"categoryIdent"};
 //  auto size = c.size();
+unsigned int Category::size() {
+    return items.size();
+}
 
-// TODO Write a function, getIdent, that returns the identifier for the Category.
+// TESTING Write a function, getIdent, that returns the identifier for the Category.
 //
 // Example:
 //  Category cObj{"categoryIdent"};
 //  auto ident = cObj.getIdent();
+std::string Category::getIdent() {
+    return identifier;
+}
 
-// TODO Write a function, setIdent, that takes one parameter, a string for a new
+// TESTING Write a function, setIdent, that takes one parameter, a string for a new
 // Category identifier, and updates the member variable. It returns nothing.
 //
 // Example:
 //  Category cObj{"categoryIdent"};
 //  cObj.setIdent("categoryIdent2");
+void Category::setIdent(std::string ident) {
+    identifier = ident;
+}
 
-// TODO Write a function, newItem, that takes four parameters, an Item
+// TESTING Write a function, newItem, that takes four parameters, an Item
 // identifier (string), description (string), amount (double), and date (Date)
 // and returns the Item object as a reference.  If an object with the same
 // identifier already exists, then the existing object should be overwritten by
@@ -45,8 +57,19 @@
 // Example:
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
+Item Category::newItem(std::string ident, std::string description, double amount, Date date) {
+    auto item = Item(ident, description, amount, date);
+    for (int i = 0; i < (int) items.size(); i++) {
+        if (items[i].getIdent() == ident) {
+            items[i] = item;
 
-// TODO Write a function, addItem, that takes one parameter, an Item object, and
+            return items[i];
+        }
+    }
+    throw std::runtime_error(runtimeError);
+}
+
+// TESTING Write a function, addItem, that takes one parameter, an Item object, and
 // returns true if the object was successfully inserted. If an object with the
 // same identifier already exists, then:
 //  - the tags should be merged
@@ -59,8 +82,25 @@
 //  Category cObj{"categoryIdent"};
 //  Item iObj{"itemIdent"};
 //  cObj.addItem(iObj);
+bool Category::addItem(Item& item) {
+    for (int i = 0; i < (int) items.size(); i++) {
+        if (item.getIdent() == items[i].getIdent()) {
+            //add the tags etc then return false
+            for (int j = 0; j < (int) item.numTags(); j++) {
+                items[i].addTag(item.getTag(j));
+            }
+            items[i].setDescription(item.getDescription());
+            items[i].setAmount(item.getAmount());
+            items[i].setDate(item.getDate());
+            return false;
+        }
+    }
+    //insert the object and return true
+    items.push_back(item);
+    return true;
+}
 
-// TODO Write a function, getItem, that takes one parameter, an Item identifier
+// TESTING Write a function, getItem, that takes one parameter, an Item identifier
 // (a string) and returns the Item as a reference. If no Item exists, throw an
 // appropriate exception.
 //
@@ -70,8 +110,16 @@
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 //  auto iObj = cObj.getItem("newItemName");
+Item Category::getItem(std::string identifier) {
+    for (int i = 0; i < (int) items.size(); i++) {
+        if (identifier == items[i].getIdent()) {
+            return items[i];
+        }
+    }
+    throw std::out_of_range(runtimeError);
+}
 
-// TODO Write a function, getSum, that returns the sum of all Item amounts in
+// TESTING Write a function, getSum, that returns the sum of all Item amounts in
 // the category. If no Item exists return 0.
 //
 // Example:
@@ -79,8 +127,16 @@
 //  cObj.newItem("newItemName", "Description", "1.0", Date(2024,12,25));
 //  cObj.newItem("newItemName2", "Description", "2.0", Date(2024,12,25));
 //  auto sum = cObj.getSum() // 3.0
+double Category::getSum() {
+    double sum = 0;
+    for (int i = 0; i < (int) items.size(); i++) {
+        sum += items[i].getAmount();
+    }
+    std::cout << sum;
+    return sum;
+}
 
-// TODO Write a function, deleteItem, that takes one parameter, an Item
+// TESTING Write a function, deleteItem, that takes one parameter, an Item
 // identifier (a string), deletes the item with that identifier from the
 // container, and returns true if the Item was deleted. If no Item exists, throw
 // an appropriate exception.
@@ -89,8 +145,17 @@
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 //  bool result = cObj.deleteItem("newItemName");
+bool Category::deleteItem(std::string identifier) {
+    for (int i = 0; i < (int) items.size(); i++) {
+        if (items[i].getIdent() == identifier) {
+            items.erase(items.begin() + i);
+            return true;
+        }
+    }
+    throw std::out_of_range(runtimeError);
+}
 
-// TODO Write an == operator overload for the Category class, such that two
+// TESTING Write an == operator overload for the Category class, such that two
 // Category objects are equal only if they have the same identifier and same
 // Items.
 //
@@ -101,8 +166,14 @@
 //  if(cObj1 == cObj2) {
 //    ...
 //  }
+bool operator== (const Category &lhs, const Category &rhs) {
+    if ((lhs.identifier == rhs.identifier) && (lhs.items == rhs.items)) {
+        return true;
+    }
+    return false;
+}
 
-// TODO Write a function, str, that takes no parameters and returns a
+// TESTING Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Category.
 //
 // See the coursework specification for how this JSON should look.
@@ -110,3 +181,29 @@
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
+std::string Category::str() {
+    json j;
+    to_json(j);
+    
+    return j;
+}
+
+void Category::to_json(json& j) {
+    j = json{{"items", itemString()}};
+}
+
+std::string Category::itemString() {
+    std::stringstream ss;
+    ss << "{";
+    for (int i = 0; i < (int) items.size(); i++) {
+        ss << items[i].str();
+        if (i == (int) items.size()-1)
+        {
+            ss << "}";
+        } else {
+            ss << ",";
+        }
+        
+    }
+    return ss.str();
+}

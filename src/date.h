@@ -15,7 +15,18 @@
 #ifndef DATE_H
 #define DATE_H
 
+#include <ctime>
 #include <string>
+#include <iostream>
+#include <sstream>
+
+static const unsigned int minimumDate = 1;
+static const unsigned int yearAdjust = 1900;
+static const unsigned int maximumMonth = 12;
+static const std::string yearError = "please make sure the year is valid";
+static const std::string monthError = "please make sure the month is valid";
+static const std::string dayError = "please make sure the day is valid";
+static const std::string inputError = "please input a valid date";
 
 class Date {
 public:
@@ -40,14 +51,7 @@ private:
     unsigned int currentYear;
     unsigned int currentDay;
     unsigned int currentMonth;
-    const unsigned int minimumDate = 1;
-    const unsigned int yearAdjust = 1900;
-    const unsigned int maximumMonth = 12;
-    const std::string yearError = "please make sure the year is valid";
-    const std::string monthError = "please make sure the month is valid";
-    const std::string dayError = "please make sure the day is valid";
-    const std::string inputError = "please input a valid date";
-
+    
     bool validDay(const unsigned int day, const unsigned int month, const unsigned int year);
     bool validYear(const unsigned int inputYear);
     bool validMonth( const unsigned int inputYear, const unsigned int inputMonth);

@@ -16,11 +16,16 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
+#include <iostream>
+#include <sstream>
+
 #include "date.h"
 #include "lib_json.hpp"
 
 using json = nlohmann::json;
 
+static const std::string tagNotFoundError = "Error: tag was not found";
 class Item {
 public:
     Item(std::string identifier, std::string description, double amount, Date date);
@@ -28,7 +33,7 @@ public:
     std::string getDescription() const;
     void setDescription(const std::string description);
     bool addTag(const std::string tag);
-    bool deleteTag(const std::string tag);
+    bool deleteTag( std::string tag);
     unsigned int numTags() const;
     bool containsTag(const std::string tag) const;
     double getAmount() const;
@@ -36,7 +41,8 @@ public:
     Date getDate() const;
     void setDate(const Date date);
     std::string str();
-    std::string tagString() const;
+    
+    std::string getTag(int index);
 
     friend bool operator== (const Item &lhs, const Item &rhs);
 
@@ -47,9 +53,8 @@ private:
     double amount;
     Date date;
     std::vector<std::string> tags;
-    const std::string tagNotFoundError = "Error: tag was not found";
-
+    
     void to_json(json& json);
-
+    std::string tagString() const;
 };
 #endif // ITEM_H

@@ -9,14 +9,8 @@
 
 #include "item.h"
 
-#include "lib_json.hpp"
 using json = nlohmann::json;
-
-#include <stdexcept>
-#include <iostream>
-#include <sstream>
-
-// TESTING Write a constructor that takes four parameters, a string identifier,
+// DONE Write a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
 //
 // Example:
@@ -26,10 +20,11 @@ Item::Item(std::string inputIdentifier, std::string inputDescription, double inp
     identifier = inputIdentifier;
     description = inputDescription;
     amount = inputAmount;
-    auto date = inputDate;
+    Date date = inputDate;
+    inputDate = date;
 }
 
-// TESTING Write a function, getIdent, that returns the identifier for the Item.
+// DONE Write a function, getIdent, that returns the identifier for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
@@ -38,7 +33,7 @@ std::string Item::getIdent() const {
     return identifier;
 }
 
-// TESTING Write a function, getDescription, that returns the description for the Item.
+// DONE Write a function, getDescription, that returns the description for the Item.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
@@ -47,7 +42,7 @@ std::string Item::getDescription() const {
     return description;
 }
 
-// TESTING Write a function, setDescription, that takes one parameter, a string for a new
+// DONE Write a function, setDescription, that takes one parameter, a string for a new
 //  Item description, and updates the member variable. It returns nothing.
 //
 // Example:
@@ -57,7 +52,7 @@ void Item::setDescription(const std::string inputDescription) {
     description = inputDescription;
 }
 
-// TESTING Write a function, addTag, that takes one parameters, a tag
+// DONE Write a function, addTag, that takes one parameters, a tag
 //  string and returns true if the entry was inserted into the
 //  container or false if the tag already existed.
 //
@@ -77,7 +72,7 @@ bool Item::addTag(const std::string inputTag) {
     return true;
 }
 
-// TESTING Write a function, deleteTag, that takes one parameter, a tag
+// DONE Write a function, deleteTag, that takes one parameter, a tag
 // string, deletes it from the container, and returns true if the tag
 // string was deleted. If no tag exists with that name, throw an appropriate
 // exception.
@@ -86,7 +81,7 @@ bool Item::addTag(const std::string inputTag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
-bool Item::deleteTag(const std::string inputTag) {
+bool Item::deleteTag( std::string inputTag) {
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -97,7 +92,7 @@ bool Item::deleteTag(const std::string inputTag) {
     throw std::out_of_range(tagNotFoundError);
 }
 
-// TESTING Write a function, numTags, that takes no parameters and returns an
+// DONE Write a function, numTags, that takes no parameters and returns an
 // unsigned int of the number of tags in the Item contains.
 //
 // Example:
@@ -107,7 +102,7 @@ unsigned int Item::numTags() const {
     return tags.size();
 }
 
-// TESTING Write a function, containsTag, that takes one parameter, a tag string.
+// DONE Write a function, containsTag, that takes one parameter, a tag string.
 // If the tag exists, return true. Otherwise return false.
 //
 // Example:
@@ -124,29 +119,30 @@ bool Item::containsTag(const std::string inputTag) const {
     return false;
 }
 
-// TESTING Write a function, getAmount, that returns the amount for the Item.
+// DONE Write a function, getAmount, that returns the amount for the Item.
 double Item::getAmount() const {
     return amount;
 }
 
-// TESTING Write a function setAmount, that takes one parameter, a double for
+// DONE Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
 void Item::setAmount(float inputAmount) {
     amount = inputAmount;
 }
 
-// TESTING Write a function, getDate, that returns the date for the Item.
+// DONE Write a function, getDate, that returns the date for the Item.
 Date Item::getDate() const {
     return date;
 }
 
-// TESTING Write a function setDate, that takes one parameter, a date, and updates
+// DONE Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
 void Item::setDate(const Date inputDate) {
-    auto date = inputDate;
+    Date date = inputDate;
+    std::cout << date.str();
 }
 
-// TESTING Write an == operator overload for the Item class, such that two
+// DONE Write an == operator overload for the Item class, such that two
 // Item objects are equal only if they have the same identifier, date,
 // amount, description, and tags.
 // Example:
@@ -168,7 +164,7 @@ bool operator== (const Item &lhs, const Item &rhs) {
     return isEqual;
 }
 
-// TODO Write a function, str, that takes no parameters and returns a
+// DONE Write a function, str, that takes no parameters and returns a
 // std::string of the JSON representation of the data in the Item.
 // See the coursework specification for how this JSON should look.
 // Example:
@@ -190,13 +186,17 @@ void Item::to_json(json& j) {
 std::string Item::tagString() const {
     std::stringstream ss;
     ss << "[";
-    for (int i = 0; i < tags.size(); i++) {
+    for (int i = 0; i < (int) tags.size(); i++) {
         ss << "\"" << tags[i] << "\"";
-        if (i == tags.size()-1 /**if this will be the last loop*/) {
+        if (i == (int) tags.size()-1 /**if this will be the last loop*/) {
             ss << "]";
         } else {
             ss << ",";
         }
     }
     return ss.str();
+}
+
+std::string Item::getTag(int index) {
+    return tags[index];
 }

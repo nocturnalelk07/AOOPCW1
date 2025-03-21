@@ -8,11 +8,6 @@
 // -----------------------------------------------------
 
 #include "date.h"
-#include <ctime>
-#include <string>
-#include <iostream>
-#include <sstream>
-
 
 // DONE write a default constructor that sets the member variables to today's
 // date. 
