@@ -20,7 +20,8 @@
 #include "item.h"
 #include "date.h"
 
-static const std::string runtimeError = "category error at runtime";
+static const std::string categoryRuntimeError = "category error at runtime";
+static const std::string categoryOOR = "category out of range error";
 
 class Category {
 public:
@@ -31,6 +32,7 @@ public:
     Item newItem(const std::string itemIdent, const std::string desc, const double amount, const Date date);
     bool addItem(Item& item);
     Item getItem(const std::string ident) const;
+    std::vector<Item> getItems();
     double getSum();
     bool deleteItem(const std::string ident);
     std::string str();

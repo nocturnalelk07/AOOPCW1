@@ -66,7 +66,7 @@ Item Category::newItem(std::string ident, std::string description, double amount
             return items[i];
         }
     }
-    throw std::runtime_error(runtimeError);
+    throw std::runtime_error(categoryRuntimeError);
 }
 
 // DONE Write a function, addItem, that takes one parameter, an Item object, and
@@ -116,7 +116,7 @@ Item Category::getItem(const std::string identifier) const {
             return items[i];
         }
     }
-    throw std::out_of_range(runtimeError);
+    throw std::out_of_range(categoryOOR);
 }
 
 // DONE Write a function, getSum, that returns the sum of all Item amounts in
@@ -152,7 +152,7 @@ bool Category::deleteItem(std::string identifier) {
             return true;
         }
     }
-    throw std::out_of_range(runtimeError);
+    throw std::out_of_range(categoryOOR);
 }
 
 // DONE Write an == operator overload for the Category class, such that two
@@ -199,8 +199,7 @@ std::string Category::itemString() {
     ss << "{";
     for (int i = 0; i < (int) items.size(); i++) {
         ss << items[i].str();
-        if (i == (int) items.size()-1)
-        {
+        if (i == (int) items.size()-1) {
             ss << "}";
         } else {
             ss << ",";
@@ -208,4 +207,8 @@ std::string Category::itemString() {
         
     }
     return ss.str();
+}
+
+std::vector<Item> Category::getItems() {
+    return items;
 }

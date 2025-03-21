@@ -14,12 +14,35 @@
 #ifndef EXPENSETRACKER_H
 #define EXPENSETRACKER_H
 
+#include "category.h"
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <utility>
+
+static const std::string etRuntimeError = "et runtime error";
+static const std::string etOOR = "et out of range error";
+
 class ExpenseTracker {
 public:
     ExpenseTracker();
-    unsigned int size();
+    unsigned int size() const;
+    Category newCategory(const std::string categoryIdent);
+    bool addCategory(Category category);
+    Category getCategory(const std::string categoryIdent) const;
+    bool deleteCategory(std::string categoryIdent);
+    double getSum();
+    void load(std::string DbFileName);
+    void save(std::string filePath);
+    std::string str();
+    void to_json(json& j);
+    std::string categoryString();
+
+    friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs);
 
 private:
+    std::vector<Category> categories;
 
 };
 

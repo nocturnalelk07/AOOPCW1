@@ -7,17 +7,15 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/52781
 // -----------------------------------------------------
 #include "expensetracker.h"
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <utility>
+
 
 // TODO Write a ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
 //
 // Example:
 //  ExpenseTracker etObj{};
+ExpenseTracker::ExpenseTracker() {
+}
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories the ExpenseTracker contains.
@@ -25,6 +23,9 @@
 // Example:
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
+unsigned int ExpenseTracker::size() const{
+    return categories.size();
+}
 
 // TODO Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
@@ -35,6 +36,14 @@
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
+Category ExpenseTracker::newCategory(const std::string ident) {
+    for (int i = 0; i < (int) categories.size(); i++){
+        if (categories[i].getIdent() == ident) {
+            return categories[i];
+        }
+    }
+    throw std::runtime_error(etRuntimeError);
+}
 
 // TODO Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
@@ -47,6 +56,26 @@
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
+bool ExpenseTracker::addCategory(Category category) {
+    for (int i = 0; i < (int) categories.size(); i++) {
+        if (categories[i].getIdent() == category.getIdent()) {
+            for (int j = 0; j < (int) category.size(); j++)
+            {
+                //adds the item from the given category to the existing one
+                categories[i].addItem(category.getItems()[j]);
+            }
+            //override any other values here
+            return false;
+        }
+    }
+    //if we get here category doesnt exist and we can add it
+    try {
+    categories.push_back(category);
+    } catch(...) {
+        throw std::runtime_error(etRuntimeError);
+    }
+    return true;
+}
 
 // TODO Write a function, getCategory, that takes one parameter, a Category
 //  identifier and returns the Category with that identifier. If no Category
@@ -56,6 +85,14 @@
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
+Category ExpenseTracker::getCategory(const std::string ident) const {
+    for (int i = 0; i < (int) categories.size(); i++) {
+        if (categories[i].getIdent() == ident) {
+            return categories[i];
+        }
+    }
+    throw std::out_of_range(etOOR);
+}
 
 // TODO Write a function, deleteCategory, that takes one parameter, a Category
 //  identifier, and deletes that catagory from the container, and returns true
@@ -66,6 +103,15 @@
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
+bool ExpenseTracker::deleteCategory(std::string ident) {
+    for (int i = 0; i < (int) categories.size(); i++) {
+        if (categories[i].getIdent() == ident) {
+            categories.erase(categories.begin() + i);
+            return true;
+        }
+    }
+    throw std::out_of_range(etOOR);
+}
 
 // TODO Write a function, getSum, that returns the sum of all Category expense
 // sums. This consists of the sum of all individual item amounts across all categories.
@@ -80,6 +126,13 @@
 //  cObj2.newItem("newItemName3", "Description", "3.0", Date(2024,12,25));
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
+double ExpenseTracker::getSum() {
+    double sum = 0;
+    for (int i = 0; i < (int) categories.size(); i++) {
+        sum += categories[i].getSum();
+    }
+    return sum;
+}
 
 // TODO Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
@@ -144,6 +197,9 @@
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
+void ExpenseTracker::load(std::string file) {
+
+}
 
 // TODO Write a function, save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the ExpenseTracker object
@@ -164,6 +220,9 @@
 //  if(etObj1 == etObj2) {
 //    ...
 //  }
+void ExpenseTracker::save(std::string filePath) {
+
+}
 
 // TODO Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the ExpenseTracker.
@@ -174,3 +233,30 @@
 // Example:
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
+std::string ExpenseTracker::str() {
+    json j;
+    to_json(j);
+
+    return j;
+}
+
+//converts to json
+void ExpenseTracker::to_json(json& j) {
+    j = json{{"categories", categoryString()}};
+}
+
+//formats categories into a json style string
+std::string ExpenseTracker::categoryString() {
+    std::stringstream ss;
+    ss << "{";
+    for (int i = 0; i < (int) categories.size(); i++) {
+        ss << categories[i].str();
+        if (i == (int) categories.size()-1) {
+            ss << "}";
+        } else {
+            ss << ",";
+        }
+    }
+    return ss.str();
+    
+}
