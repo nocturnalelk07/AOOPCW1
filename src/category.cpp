@@ -15,7 +15,9 @@
 // Example:
 //  Category c{"categoryIdent"};
 Category::Category(std::string ident) {
+    std::cout << "calling category constructor\n";
     identifier = ident;
+
 }
 
 // DONE Write a function, size, that takes no parameters and returns an unsigned
@@ -25,6 +27,8 @@ Category::Category(std::string ident) {
 //  Category c{"categoryIdent"};
 //  auto size = c.size();
 unsigned int Category::size() const {
+    std::cout << "calling category size\n";
+    std::cout << "category item count: " << items.size() << "\n";
     return items.size();
 }
 
@@ -34,6 +38,7 @@ unsigned int Category::size() const {
 //  Category cObj{"categoryIdent"};
 //  auto ident = cObj.getIdent();
 std::string Category::getIdent() const {
+    std::cout << "calling category get identifier\n";
     return identifier;
 }
 
@@ -44,6 +49,7 @@ std::string Category::getIdent() const {
 //  Category cObj{"categoryIdent"};
 //  cObj.setIdent("categoryIdent2");
 void Category::setIdent(std::string ident) {
+    std::cout << "calling category set identifier\n";
     identifier = ident;
 }
 
@@ -58,15 +64,26 @@ void Category::setIdent(std::string ident) {
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 Item Category::newItem(std::string ident, std::string description, double amount, Date date) {
+    std::cout << "calling category new item\n";
+    //makes item from params
     auto item = Item(ident, description, amount, date);
-    for (int i = 0; i < (int) items.size(); i++) {
-        if (items[i].getIdent() == ident) {
-            items[i] = item;
 
+    //if the item is already in the category replace it
+    for (int i = 0; i < (int) size(); i++) {
+        if (items.at(i).getIdent() == ident) {
+            items.at(i) = item;
+            std::cout << "item replaced \n";
             return items[i];
         }
     }
+    try {
+        std::cout << "adding new item \n";
+        items.push_back(item);
+        std::cout << "new item added, size is now: " << size() << "\n";
+        return item;
+    } catch(...) {
     throw std::runtime_error(categoryRuntimeError);
+    }
 }
 
 // DONE Write a function, addItem, that takes one parameter, an Item object, and
@@ -83,8 +100,9 @@ Item Category::newItem(std::string ident, std::string description, double amount
 //  Item iObj{"itemIdent"};
 //  cObj.addItem(iObj);
 bool Category::addItem(Item& item) {
+    std::cout << "calling category add item\n";
     for (int i = 0; i < (int) items.size(); i++) {
-        if (item.getIdent() == items[i].getIdent()) {
+        if (item.getIdent() == items.at(i).getIdent()) {
             //add the tags etc then return false
             for (int j = 0; j < (int) item.numTags(); j++) {
                 items[i].addTag(item.getTag(j));
@@ -111,6 +129,7 @@ bool Category::addItem(Item& item) {
 //  cObj.newItem("newItemName");
 //  auto iObj = cObj.getItem("newItemName");
 Item Category::getItem(const std::string identifier) const {
+    std::cout << "calling category get item\n";
     for (int i = 0; i < (int) items.size(); i++) {
         if (identifier == items[i].getIdent()) {
             return items[i];
@@ -128,11 +147,12 @@ Item Category::getItem(const std::string identifier) const {
 //  cObj.newItem("newItemName2", "Description", "2.0", Date(2024,12,25));
 //  auto sum = cObj.getSum() // 3.0
 double Category::getSum() {
+    std::cout << "calling category get sum\n";
     double sum = 0;
     for (int i = 0; i < (int) items.size(); i++) {
         sum += items[i].getAmount();
     }
-    std::cout << sum;
+    std::cout << "the total sum is: " << sum << "\n";
     return sum;
 }
 
@@ -146,6 +166,7 @@ double Category::getSum() {
 //  cObj.newItem("newItemName");
 //  bool result = cObj.deleteItem("newItemName");
 bool Category::deleteItem(std::string identifier) {
+    std::cout << "calling category delete item\n";
     for (int i = 0; i < (int) items.size(); i++) {
         if (items[i].getIdent() == identifier) {
             items.erase(items.begin() + i);
@@ -167,6 +188,7 @@ bool Category::deleteItem(std::string identifier) {
 //    ...
 //  }
 bool operator== (const Category &lhs, const Category &rhs) {
+    std::cout << "calling category ==\n";
     if ((lhs.identifier == rhs.identifier) && (lhs.items == rhs.items)) {
         return true;
     }
@@ -181,20 +203,22 @@ bool operator== (const Category &lhs, const Category &rhs) {
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
-std::string Category::str() {
-    json j;
-    to_json(j);
-    
+std::string Category::str() const{
+    std::cout << "calling category str\n";
+    json j = to_json();  
     return j;
 }
 
 //converts to json
-void Category::to_json(json& j) {
-    j = json{{"items", itemString()}};
+json Category::to_json() const {
+    std::cout << "calling category to json\n";
+    json j = json{{"items", itemString()}};
+    return j;
 }
 
 //formats items vector as json
-std::string Category::itemString() {
+std::string Category::itemString() const{
+    std::cout << "calling category item string\n";
     std::stringstream ss;
     ss << "{";
     for (int i = 0; i < (int) items.size(); i++) {
@@ -210,5 +234,6 @@ std::string Category::itemString() {
 }
 
 std::vector<Item> Category::getItems() {
+    std::cout << "calling category get items\n";
     return items;
 }

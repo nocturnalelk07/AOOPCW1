@@ -36,8 +36,8 @@ public:
     void load(std::string DbFileName);
     void save(std::string filePath);
     std::string str();
-    void to_json(json& j);
-    std::string categoryString();
+    json to_json() const;
+    std::string categoryString() const;
 
     friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs);
 

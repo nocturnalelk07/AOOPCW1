@@ -16,7 +16,7 @@ using json = nlohmann::json;
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 Item::Item(std::string inputIdentifier, std::string inputDescription, double inputAmount, Date inputDate) {
-    std::cout << "in item constructor";
+    std::cout << "in item constructor \n";
     identifier = inputIdentifier;
     description = inputDescription;
     amount = inputAmount;
@@ -30,6 +30,7 @@ Item::Item(std::string inputIdentifier, std::string inputDescription, double inp
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getIdent();
 std::string Item::getIdent() const {
+    std::cout << "calling item get ident\n";
     return identifier;
 }
 
@@ -39,6 +40,7 @@ std::string Item::getIdent() const {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
 std::string Item::getDescription() const {
+    std::cout << "calling item get description\n";
     return description;
 }
 
@@ -49,6 +51,7 @@ std::string Item::getDescription() const {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
 void Item::setDescription(const std::string inputDescription) {
+    std::cout << "calling item set description\n";
     description = inputDescription;
 }
 
@@ -60,6 +63,7 @@ void Item::setDescription(const std::string inputDescription) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 bool Item::addTag(const std::string inputTag) {
+    std::cout << "calling item add tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -82,6 +86,7 @@ bool Item::addTag(const std::string inputTag) {
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
 bool Item::deleteTag( std::string inputTag) {
+    std::cout << "calling item delete tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -99,6 +104,7 @@ bool Item::deleteTag( std::string inputTag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
 unsigned int Item::numTags() const {
+    std::cout << "calling item num tags\n";
     return tags.size();
 }
 
@@ -110,6 +116,7 @@ unsigned int Item::numTags() const {
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
 bool Item::containsTag(const std::string inputTag) const {
+    std::cout << "calling item contains tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -121,23 +128,27 @@ bool Item::containsTag(const std::string inputTag) const {
 
 // DONE Write a function, getAmount, that returns the amount for the Item.
 double Item::getAmount() const {
+    std::cout << "calling item get amount\n";
     return amount;
 }
 
 // DONE Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
 void Item::setAmount(float inputAmount) {
+    std::cout << "calling item set amount\n";
     amount = inputAmount;
 }
 
 // DONE Write a function, getDate, that returns the date for the Item.
 Date Item::getDate() const {
+    std::cout << "calling item get date\n";
     return date;
 }
 
 // DONE Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
 void Item::setDate(const Date inputDate) {
+    std::cout << "calling item set date\n";
     Date date = inputDate;
     std::cout << date.str();
 }
@@ -152,6 +163,7 @@ void Item::setDate(const Date inputDate) {
 //   ...
 //  }
 bool operator== (const Item &lhs, const Item &rhs) {
+    std::cout << "calling item ==\n";
     bool isEqual = false;
     if((lhs.identifier == rhs.identifier)
          && (lhs.description == rhs.description)
@@ -170,20 +182,22 @@ bool operator== (const Item &lhs, const Item &rhs) {
 // Example:
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
-std::string Item::str() {
-    json j;
-    to_json(j);
-    
+std::string Item::str() const{
+    std::cout << "calling item str\n";
+    json j = to_json();    
     return j;
 }
 
-void Item::to_json(json& j) {
-    j = json{{"identifier", identifier}, {"amount", amount}, 
+json Item::to_json() const{
+    std::cout << "calling item to json\n";
+    json j = json{{"identifier", identifier}, {"amount", amount}, 
     {"date", date.str()}, {"description", description}, {"tags", tagString()}};
+    return j;
 }
 
 //returns the items tags as a string for json representation
 std::string Item::tagString() const {
+    std::cout << "calling item tag string\n";
     std::stringstream ss;
     ss << "[";
     for (int i = 0; i < (int) tags.size(); i++) {
@@ -198,5 +212,6 @@ std::string Item::tagString() const {
 }
 
 std::string Item::getTag(int index) {
+    std::cout << "calling item get tag\n";
     return tags[index];
 }

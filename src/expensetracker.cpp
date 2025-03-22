@@ -24,6 +24,7 @@ ExpenseTracker::ExpenseTracker() {
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
 unsigned int ExpenseTracker::size() const{
+    std::cout << "calling et Size \n";
     return categories.size();
 }
 
@@ -37,6 +38,7 @@ unsigned int ExpenseTracker::size() const{
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 Category ExpenseTracker::newCategory(const std::string ident) {
+    std::cout << "calling et new category\n";
     for (int i = 0; i < (int) categories.size(); i++){
         if (categories[i].getIdent() == ident) {
             return categories[i];
@@ -57,12 +59,14 @@ Category ExpenseTracker::newCategory(const std::string ident) {
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
 bool ExpenseTracker::addCategory(Category category) {
+    std::cout << "calling et add category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == category.getIdent()) {
             for (int j = 0; j < (int) category.size(); j++)
             {
                 //adds the item from the given category to the existing one
-                categories[i].addItem(category.getItems()[j]);
+                std::vector<Item> newItems = category.getItems();
+                categories[i].addItem(newItems[j]);
             }
             //override any other values here
             return false;
@@ -86,11 +90,17 @@ bool ExpenseTracker::addCategory(Category category) {
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
 Category ExpenseTracker::getCategory(const std::string ident) const {
+    std::cout << "calling et get category\n";
+    std::cout << "input ident: " << ident << "\nexpense tracker category size: " << categories.size() << "\n";
     for (int i = 0; i < (int) categories.size(); i++) {
+        std::cout << "categories ident: " << categories[i].getIdent() << "\n";
+        categories[i].size();
         if (categories[i].getIdent() == ident) {
+            std::cout << "leaving get category with: " << categories[i].getIdent() << "\n";
             return categories[i];
         }
     }
+    std::cout << "throwing get category: \n";
     throw std::out_of_range(etOOR);
 }
 
@@ -104,6 +114,7 @@ Category ExpenseTracker::getCategory(const std::string ident) const {
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
 bool ExpenseTracker::deleteCategory(std::string ident) {
+    std::cout << "calling et delete category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == ident) {
             categories.erase(categories.begin() + i);
@@ -127,6 +138,7 @@ bool ExpenseTracker::deleteCategory(std::string ident) {
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
 double ExpenseTracker::getSum() {
+    std::cout << "calling et get sum\n";
     double sum = 0;
     for (int i = 0; i < (int) categories.size(); i++) {
         sum += categories[i].getSum();
@@ -198,6 +210,7 @@ double ExpenseTracker::getSum() {
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 void ExpenseTracker::load(std::string file) {
+    std::cout << "calling et load\n";
 
 }
 
@@ -221,6 +234,7 @@ void ExpenseTracker::load(std::string file) {
 //    ...
 //  }
 void ExpenseTracker::save(std::string filePath) {
+    std::cout << "calling et save\n";
 
 }
 
@@ -234,19 +248,21 @@ void ExpenseTracker::save(std::string filePath) {
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
 std::string ExpenseTracker::str() {
-    json j;
-    to_json(j);
-
+    std::cout << "calling et str\n";
+    json j = to_json();
     return j;
 }
 
 //converts to json
-void ExpenseTracker::to_json(json& j) {
-    j = json{{"categories", categoryString()}};
+json ExpenseTracker::to_json() const {
+    std::cout << "calling et to json\n";
+    json j = json{{"categories", categoryString()}};
+    return j;
 }
 
 //formats categories into a json style string
-std::string ExpenseTracker::categoryString() {
+std::string ExpenseTracker::categoryString() const {
+    std::cout << "calling et category string\n";
     std::stringstream ss;
     ss << "{";
     for (int i = 0; i < (int) categories.size(); i++) {

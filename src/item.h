@@ -40,7 +40,7 @@ public:
     void setAmount(const float amount);
     Date getDate() const;
     void setDate(const Date date);
-    std::string str();
+    std::string str() const;
     
     std::string getTag(int index);
 
@@ -54,7 +54,7 @@ private:
     Date date;
     std::vector<std::string> tags;
     
-    void to_json(json& json);
+    json to_json() const;
     std::string tagString() const;
 };
 #endif // ITEM_H

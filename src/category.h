@@ -35,7 +35,7 @@ public:
     std::vector<Item> getItems();
     double getSum();
     bool deleteItem(const std::string ident);
-    std::string str();
+    std::string str() const;
 
     friend bool operator== (const Category &lhs, const Category &rhs);
 
@@ -43,8 +43,8 @@ private:
     std::vector<Item> items;
     std::string identifier;
 
-    void to_json(json& j);
-    std::string itemString();
+    json to_json() const;
+    std::string itemString() const;
 };
 
 
