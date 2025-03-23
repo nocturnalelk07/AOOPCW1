@@ -25,16 +25,16 @@ static const std::string categoryOOR = "category out of range error";
 
 class Category {
 public:
-    Category(const std::string ident);
+    Category(const std::string &ident);
     unsigned int size() const;
     std::string getIdent() const;
-    void setIdent(const std::string ident);
-    Item newItem(const std::string itemIdent, const std::string desc, const double amount, const Date date);
-    bool addItem(Item& item);
-    Item getItem(const std::string ident) const;
-    std::vector<Item> getItems();
-    double getSum();
-    bool deleteItem(const std::string ident);
+    void setIdent(const std::string &ident);
+    Item newItem(const std::string &itemIdent, const std::string &desc, const double &amount, const Date &date);
+    bool addItem(const Item &item);
+    Item getItem(const std::string &ident) const;
+    std::vector<Item> getItems() const;
+    double getSum() const;
+    bool deleteItem(const std::string &ident);
     std::string str() const;
 
     friend bool operator== (const Category &lhs, const Category &rhs);

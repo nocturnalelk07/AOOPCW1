@@ -28,14 +28,14 @@ class ExpenseTracker {
 public:
     ExpenseTracker();
     unsigned int size() const;
-    Category newCategory(const std::string categoryIdent);
-    bool addCategory(Category category);
-    Category getCategory(const std::string categoryIdent) const;
-    bool deleteCategory(std::string categoryIdent);
-    double getSum();
-    void load(std::string DbFileName);
-    void save(std::string filePath);
-    std::string str();
+    Category newCategory(const std::string &categoryIdent);
+    bool addCategory(Category &category);
+    Category& getCategory(const std::string &categoryIdent);
+    bool deleteCategory(std::string &categoryIdent);
+    double getSum() const;
+    void load(std::string &DbFileName) const;
+    void save(std::string &filePath) const;
+    std::string str() const;
     json to_json() const;
     std::string categoryString() const;
 

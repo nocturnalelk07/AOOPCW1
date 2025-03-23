@@ -42,7 +42,7 @@ public:
     void setDate(const Date date);
     std::string str() const;
     
-    std::string getTag(int index);
+    std::string getTag(int index) const;
 
     friend bool operator== (const Item &lhs, const Item &rhs);
 

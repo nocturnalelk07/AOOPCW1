@@ -10,6 +10,7 @@
 #include "item.h"
 
 using json = nlohmann::json;
+
 // DONE Write a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
 //
@@ -211,7 +212,7 @@ std::string Item::tagString() const {
     return ss.str();
 }
 
-std::string Item::getTag(int index) {
+std::string Item::getTag(int index) const {
     std::cout << "calling item get tag\n";
     return tags[index];
 }

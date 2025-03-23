@@ -15,6 +15,7 @@
 // Example:
 //  ExpenseTracker etObj{};
 ExpenseTracker::ExpenseTracker() {
+    std::cout << "et constructor---- \n";
 }
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
@@ -37,7 +38,7 @@ unsigned int ExpenseTracker::size() const{
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
-Category ExpenseTracker::newCategory(const std::string ident) {
+Category ExpenseTracker::newCategory(const std::string &ident) {
     std::cout << "calling et new category\n";
     for (int i = 0; i < (int) categories.size(); i++){
         if (categories[i].getIdent() == ident) {
@@ -58,14 +59,16 @@ Category ExpenseTracker::newCategory(const std::string ident) {
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
-bool ExpenseTracker::addCategory(Category category) {
+bool ExpenseTracker::addCategory(Category &category) {
     std::cout << "calling et add category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == category.getIdent()) {
             for (int j = 0; j < (int) category.size(); j++)
             {
                 //adds the item from the given category to the existing one
+                
                 std::vector<Item> newItems = category.getItems();
+                std::cout << "adding " << newItems[j].str() << "to category\n";
                 categories[i].addItem(newItems[j]);
             }
             //override any other values here
@@ -89,14 +92,14 @@ bool ExpenseTracker::addCategory(Category category) {
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
-Category ExpenseTracker::getCategory(const std::string ident) const {
+Category& ExpenseTracker::getCategory(const std::string &ident) {
     std::cout << "calling et get category\n";
-    std::cout << "input ident: " << ident << "\nexpense tracker category size: " << categories.size() << "\n";
+    //loop through the categories in the expense tracker looking for the right one
     for (int i = 0; i < (int) categories.size(); i++) {
-        std::cout << "categories ident: " << categories[i].getIdent() << "\n";
         categories[i].size();
         if (categories[i].getIdent() == ident) {
             std::cout << "leaving get category with: " << categories[i].getIdent() << "\n";
+            categories[i].size();
             return categories[i];
         }
     }
@@ -113,7 +116,7 @@ Category ExpenseTracker::getCategory(const std::string ident) const {
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
-bool ExpenseTracker::deleteCategory(std::string ident) {
+bool ExpenseTracker::deleteCategory(std::string &ident) {
     std::cout << "calling et delete category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == ident) {
@@ -137,7 +140,7 @@ bool ExpenseTracker::deleteCategory(std::string ident) {
 //  cObj2.newItem("newItemName3", "Description", "3.0", Date(2024,12,25));
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
-double ExpenseTracker::getSum() {
+double ExpenseTracker::getSum() const {
     std::cout << "calling et get sum\n";
     double sum = 0;
     for (int i = 0; i < (int) categories.size(); i++) {
@@ -209,7 +212,7 @@ double ExpenseTracker::getSum() {
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
-void ExpenseTracker::load(std::string file) {
+void ExpenseTracker::load(std::string &file) const {
     std::cout << "calling et load\n";
 
 }
@@ -223,6 +226,10 @@ void ExpenseTracker::load(std::string file) {
 //  etObj.load("database.json");
 //  ...
 //  etObj.save("database.json");
+void ExpenseTracker::save(std::string &filePath) const {
+    std::cout << "calling et save\n";
+
+}
 
 // TODO Write an == operator overload for the ExpenseTracker class, such that two
 //  ExpenseTracker objects are equal only if they have the exact same data.
@@ -233,9 +240,15 @@ void ExpenseTracker::load(std::string file) {
 //  if(etObj1 == etObj2) {
 //    ...
 //  }
-void ExpenseTracker::save(std::string filePath) {
-    std::cout << "calling et save\n";
+bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
+    std::cout << "et == operator \n";
+    bool isEqual = true;
+    if (lhs.categories == rhs.categories) {
+    } else {
+        isEqual = false;
+    }
 
+    return isEqual;
 }
 
 // TODO Write a function, str, that takes no parameters and returns a
@@ -247,7 +260,7 @@ void ExpenseTracker::save(std::string filePath) {
 // Example:
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
-std::string ExpenseTracker::str() {
+std::string ExpenseTracker::str() const {
     std::cout << "calling et str\n";
     json j = to_json();
     return j;
