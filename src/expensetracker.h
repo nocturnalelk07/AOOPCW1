@@ -23,26 +23,31 @@
 
 static const std::string etRuntimeError = "et runtime error";
 static const std::string etOOR = "et out of range error";
+static const std::string descriptionStr = "description";
+static const std::string amountStr = "amount";
+static const std::string tagsStr = "tags";
+static const std::string dateStr = "date";
+static const std::string categoriesStr = "categories";
 
 class ExpenseTracker {
 public:
     ExpenseTracker();
     unsigned int size() const;
     Category newCategory(const std::string &categoryIdent);
-    bool addCategory(Category &category);
+    bool addCategory(const Category &category);
     Category& getCategory(const std::string &categoryIdent);
-    bool deleteCategory(std::string &categoryIdent);
+    bool deleteCategory(const std::string &categoryIdent);
     double getSum() const;
-    void load(std::string &DbFileName) const;
-    void save(std::string &filePath) const;
+    void load(const std::string &DbFileName);
+    void save(const std::string &filePath) const;
     std::string str() const;
-    json to_json() const;
     std::string categoryString() const;
 
     friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs);
 
 private:
     std::vector<Category> categories;
+    
 
 };
 

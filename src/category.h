@@ -42,8 +42,7 @@ public:
 private:
     std::vector<Item> items;
     std::string identifier;
-
-    json to_json() const;
+    
     std::string itemString() const;
 };
 

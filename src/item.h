@@ -28,18 +28,19 @@ using json = nlohmann::json;
 static const std::string tagNotFoundError = "Error: tag was not found";
 class Item {
 public:
-    Item(std::string identifier, std::string description, double amount, Date date);
+    Item(const std::string& identifier, const std::string& description, const double& amount, const Date& date);
+    Item(const std::string& identifier, const std::string& description, const double& amount, const Date& date, const std::vector<std::string>& tags);
     std::string getIdent() const;
     std::string getDescription() const;
-    void setDescription(const std::string description);
-    bool addTag(const std::string tag);
-    bool deleteTag( std::string tag);
+    void setDescription(const std::string &description);
+    bool addTag(const std::string &tag);
+    bool deleteTag(const std::string &tag);
     unsigned int numTags() const;
-    bool containsTag(const std::string tag) const;
+    bool containsTag(const std::string &tag) const;
     double getAmount() const;
-    void setAmount(const float amount);
+    void setAmount(const float &amount);
     Date getDate() const;
-    void setDate(const Date date);
+    void setDate(const Date &date);
     std::string str() const;
     
     std::string getTag(int index) const;
@@ -53,8 +54,6 @@ private:
     double amount;
     Date date;
     std::vector<std::string> tags;
-    
-    json to_json() const;
     std::string tagString() const;
 };
 #endif // ITEM_H

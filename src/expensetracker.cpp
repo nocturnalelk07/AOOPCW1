@@ -9,7 +9,7 @@
 #include "expensetracker.h"
 
 
-// TODO Write a ExpenseTracker constructor that takes no parameters and constructs an
+// DONE Write a ExpenseTracker constructor that takes no parameters and constructs an
 //  an ExpenseTracker object
 //
 // Example:
@@ -18,7 +18,7 @@ ExpenseTracker::ExpenseTracker() {
     std::cout << "et constructor---- \n";
 }
 
-// TODO Write a function, size, that takes no parameters and returns an unsigned
+// DONE Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories the ExpenseTracker contains.
 //
 // Example:
@@ -29,7 +29,7 @@ unsigned int ExpenseTracker::size() const{
     return categories.size();
 }
 
-// TODO Write a function, newCategory, that takes one parameter, a category
+// DONE Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
 //  returned. Throw a std::runtime_error if the Category object cannot be
@@ -40,15 +40,22 @@ unsigned int ExpenseTracker::size() const{
 //  etObj.newCategory("categoryIdent");
 Category ExpenseTracker::newCategory(const std::string &ident) {
     std::cout << "calling et new category\n";
+    //return the category if it already exists
     for (int i = 0; i < (int) categories.size(); i++){
         if (categories[i].getIdent() == ident) {
             return categories[i];
         }
     }
+    try {
+        Category category = Category(ident); 
+        categories.push_back(category);
+        return category;
+    } catch(...) {
     throw std::runtime_error(etRuntimeError);
+    }
 }
 
-// TODO Write a function, addCategory, that takes one parameter, a Category
+// DONE Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be
 //  merged (see also Category::addItem) and then returns false. Throw a
@@ -59,7 +66,7 @@ Category ExpenseTracker::newCategory(const std::string &ident) {
 //  ExpenseTracker etObj{};
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
-bool ExpenseTracker::addCategory(Category &category) {
+bool ExpenseTracker::addCategory(const Category &category) {
     std::cout << "calling et add category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == category.getIdent()) {
@@ -84,7 +91,7 @@ bool ExpenseTracker::addCategory(Category &category) {
     return true;
 }
 
-// TODO Write a function, getCategory, that takes one parameter, a Category
+// DONE Write a function, getCategory, that takes one parameter, a Category
 //  identifier and returns the Category with that identifier. If no Category
 //  exists, throw an appropriate exception.
 //
@@ -107,7 +114,7 @@ Category& ExpenseTracker::getCategory(const std::string &ident) {
     throw std::out_of_range(etOOR);
 }
 
-// TODO Write a function, deleteCategory, that takes one parameter, a Category
+// DONE Write a function, deleteCategory, that takes one parameter, a Category
 //  identifier, and deletes that catagory from the container, and returns true
 //  if the Category was deleted. If no Category exists, throw an appropriate
 //  exception.
@@ -116,7 +123,7 @@ Category& ExpenseTracker::getCategory(const std::string &ident) {
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
-bool ExpenseTracker::deleteCategory(std::string &ident) {
+bool ExpenseTracker::deleteCategory(const std::string &ident) {
     std::cout << "calling et delete category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == ident) {
@@ -127,7 +134,7 @@ bool ExpenseTracker::deleteCategory(std::string &ident) {
     throw std::out_of_range(etOOR);
 }
 
-// TODO Write a function, getSum, that returns the sum of all Category expense
+// DONE Write a function, getSum, that returns the sum of all Category expense
 // sums. This consists of the sum of all individual item amounts across all categories.
 // If no categories or no items exists return 0.
 //
@@ -212,9 +219,54 @@ double ExpenseTracker::getSum() const {
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
-void ExpenseTracker::load(std::string &file) const {
+void ExpenseTracker::load(const std::string &file) {
     std::cout << "calling et load\n";
 
+    
+    try {
+        //open the file with filePath
+        std::ifstream in(file);
+        //read the contents of the file parsed as json
+        json data = json::parse(in);
+        std::cout << data << std::endl;
+
+        //populate the container for this expense tracker by looping through the json
+        //this should add a category (and all the categories' data) each loop
+        for (json::iterator it = data.begin(); it != data.end(); ++it) {
+
+            //get the json for the current category to read
+            json jCategory = it.value();
+
+            //get the identifier
+            std::string ident = it.key();
+
+            //create the category
+            Category category = Category(ident);
+
+            //loop through the items in the category and add them
+            for (json::iterator catIt = jCategory.begin(); catIt != jCategory.end(); ++catIt) {
+                //items have an identifier, a description, an amount, a date and tags
+                std::string identifier = catIt.key();
+                std::string description = catIt.value().at(descriptionStr);
+                double amount = catIt.value().at(amountStr);
+                Date date = catIt.value().at(dateStr);
+                std::vector<std::string> tags = catIt.value().at(tagsStr);
+
+                //create an item from these variables
+                Item newItem = Item(identifier, description, amount, date, tags);
+
+                //add the item to the category
+                category.addItem(newItem);
+            } // leave item loop
+
+            //add the category to the et
+            addCategory(category);
+
+        } //leave category loop
+    
+    } catch (...) {
+            throw std::runtime_error(etRuntimeError);
+        }
 }
 
 // TODO Write a function, save, that takes one parameter, the path of the file
@@ -226,12 +278,18 @@ void ExpenseTracker::load(std::string &file) const {
 //  etObj.load("database.json");
 //  ...
 //  etObj.save("database.json");
-void ExpenseTracker::save(std::string &filePath) const {
+void ExpenseTracker::save(const std::string &filePath) const {
     std::cout << "calling et save\n";
+    
+    //find the file from the filepath and open an output stream
+    std::ofstream out(filePath);
 
+    //serialise the object to json
+    json j;
+    j = this;
 }
 
-// TODO Write an == operator overload for the ExpenseTracker class, such that two
+// DONE Write an == operator overload for the ExpenseTracker class, such that two
 //  ExpenseTracker objects are equal only if they have the exact same data.
 //
 // Example:
@@ -251,7 +309,7 @@ bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
     return isEqual;
 }
 
-// TODO Write a function, str, that takes no parameters and returns a
+// DONE Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the ExpenseTracker.
 //
 // Hint:
@@ -267,10 +325,26 @@ std::string ExpenseTracker::str() const {
 }
 
 //converts to json
-json ExpenseTracker::to_json() const {
-    std::cout << "calling et to json\n";
-    json j = json{{"categories", categoryString()}};
-    return j;
+//TODO
+void to_json(json& j, const ExpenseTracker& et) {
+    j = json{{categoriesStr, et.}};
+}
+
+void to_json(json& j, const person& p) {
+    j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
+}
+
+//TODO
+void from_json(const json& j, ExpenseTracker& et) {
+    j.at("name").get_to(p.name);
+    j.at("address").get_to(p.address);
+    j.at("age").get_to(p.age);
+}
+
+void from_json(const json& j, person& p) {
+    j.at("name").get_to(p.name);
+    j.at("address").get_to(p.address);
+    j.at("age").get_to(p.age);
 }
 
 //formats categories into a json style string

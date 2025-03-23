@@ -9,20 +9,27 @@
 
 #include "item.h"
 
-using json = nlohmann::json;
-
 // DONE Write a constructor that takes four parameters, a string identifier,
 // a description, an amount, and a date and initialises the object and member data.
 //
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
-Item::Item(std::string inputIdentifier, std::string inputDescription, double inputAmount, Date inputDate) {
+Item::Item(const std::string& inputIdentifier, const std::string& inputDescription, const double& inputAmount, const Date& inputDate) {
     std::cout << "in item constructor \n";
     identifier = inputIdentifier;
     description = inputDescription;
     amount = inputAmount;
-    Date date = inputDate;
-    inputDate = date;
+    date = inputDate;
+}
+
+Item::Item(const std::string& inputIdentifier, const std::string& inputDescription, const double& inputAmount, const Date& inputDate,
+     const std::vector<std::string>& inputTags) {
+    std::cout << "in item constructor \n";
+    identifier = inputIdentifier;
+    description = inputDescription;
+    amount = inputAmount;
+    date = inputDate;
+    tags = inputTags;
 }
 
 // DONE Write a function, getIdent, that returns the identifier for the Item.
@@ -51,7 +58,7 @@ std::string Item::getDescription() const {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
-void Item::setDescription(const std::string inputDescription) {
+void Item::setDescription(const std::string &inputDescription) {
     std::cout << "calling item set description\n";
     description = inputDescription;
 }
@@ -63,7 +70,7 @@ void Item::setDescription(const std::string inputDescription) {
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
-bool Item::addTag(const std::string inputTag) {
+bool Item::addTag(const std::string &inputTag) {
     std::cout << "calling item add tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
@@ -86,7 +93,7 @@ bool Item::addTag(const std::string inputTag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
-bool Item::deleteTag( std::string inputTag) {
+bool Item::deleteTag(const std::string &inputTag) {
     std::cout << "calling item delete tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
@@ -116,7 +123,7 @@ unsigned int Item::numTags() const {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
-bool Item::containsTag(const std::string inputTag) const {
+bool Item::containsTag(const std::string &inputTag) const {
     std::cout << "calling item contains tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
@@ -135,7 +142,7 @@ double Item::getAmount() const {
 
 // DONE Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
-void Item::setAmount(float inputAmount) {
+void Item::setAmount(const float &inputAmount) {
     std::cout << "calling item set amount\n";
     amount = inputAmount;
 }
@@ -148,7 +155,7 @@ Date Item::getDate() const {
 
 // DONE Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
-void Item::setDate(const Date inputDate) {
+void Item::setDate(const Date &inputDate) {
     std::cout << "calling item set date\n";
     Date date = inputDate;
     std::cout << date.str();
