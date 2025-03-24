@@ -211,34 +211,39 @@ bool operator== (const Category &lhs, const Category &rhs) {
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
-std::string Category::str() const{
+std::string Category::str() {
     std::cout << "calling category str\n";
-    json j = to_json();  
-    return j;
+    std::stringstream ss;
+    json j;
+    to_json(j, *this);
+    ss << j;
+    std::cout << "returning category str\n";
+    return ss.str();
 }
 
 //converts to json
-json Category::to_json() const {
-    std::cout << "calling category to json\n";
-    json j = json{{"items", itemString()}};
-    return j;
+void Category::to_json(json& j, Category& c) {
+    j = json{{identifierStr, c.identifier}, {itemsStr, c.getItemString()}};
 }
 
-//formats items vector as json
-std::string Category::itemString() const{
-    std::cout << "calling category item string\n";
+//converts the items vector into a string for the to_json
+std::string Category::getItemString() {
     std::stringstream ss;
-    ss << "{";
     for (int i = 0; i < (int) items.size(); i++) {
-        ss << items[i].str();
+        std::string it = items.at(i).str();
+        ss << it;
         if (i == (int) items.size()-1) {
             ss << "}";
         } else {
             ss << ",";
         }
-        
     }
     return ss.str();
+}
+
+void Category::from_json(const json& j, Category& c) {
+    j.at(identifierStr).get_to(identifier);
+    //j.at(itemsStr).get_to(items);
 }
 
 std::vector<Item> Category::getItems() const {

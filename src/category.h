@@ -22,6 +22,7 @@
 
 static const std::string categoryRuntimeError = "category error at runtime";
 static const std::string categoryOOR = "category out of range error";
+static const std::string itemsStr = "items";
 
 class Category {
 public:
@@ -35,7 +36,10 @@ public:
     std::vector<Item> getItems() const;
     double getSum() const;
     bool deleteItem(const std::string &ident);
-    std::string str() const;
+    std::string str();
+    void to_json(json& j, Category& c);
+    std::string getItemString();
+    void from_json(const json& j, Category& c);
 
     friend bool operator== (const Category &lhs, const Category &rhs);
 

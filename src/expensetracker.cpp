@@ -278,15 +278,16 @@ void ExpenseTracker::load(const std::string &file) {
 //  etObj.load("database.json");
 //  ...
 //  etObj.save("database.json");
-void ExpenseTracker::save(const std::string &filePath) const {
+void ExpenseTracker::save(const std::string &filePath) {
     std::cout << "calling et save\n";
     
     //find the file from the filepath and open an output stream
     std::ofstream out(filePath);
 
     //serialise the object to json
-    json j;
-    j = this;
+    std::string string = str();
+    out << string;
+    out.close();
 }
 
 // DONE Write an == operator overload for the ExpenseTracker class, such that two
@@ -318,41 +319,29 @@ bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
 // Example:
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
-std::string ExpenseTracker::str() const {
+std::string ExpenseTracker::str() {
     std::cout << "calling et str\n";
-    json j = to_json();
-    return j;
+    std::stringstream ss;
+    json j;
+    to_json(j, *this);
+    ss << j;
+    std::cout << "returning et str\n";
+    return ss.str();
 }
 
 //converts to json
 //TODO
-void to_json(json& j, const ExpenseTracker& et) {
-    j = json{{categoriesStr, et.}};
+void ExpenseTracker::to_json(json& j, ExpenseTracker& et) {
+    j = json{{categoriesStr, et.categoryString()}};
 }
 
-void to_json(json& j, const person& p) {
-    j = json{{"name", p.name}, {"address", p.address}, {"age", p.age}};
-}
-
-//TODO
-void from_json(const json& j, ExpenseTracker& et) {
-    j.at("name").get_to(p.name);
-    j.at("address").get_to(p.address);
-    j.at("age").get_to(p.age);
-}
-
-void from_json(const json& j, person& p) {
-    j.at("name").get_to(p.name);
-    j.at("address").get_to(p.address);
-    j.at("age").get_to(p.age);
-}
-
-//formats categories into a json style string
-std::string ExpenseTracker::categoryString() const {
+//formats categories vector into a json style string
+std::string ExpenseTracker::categoryString() {
     std::cout << "calling et category string\n";
     std::stringstream ss;
     ss << "{";
     for (int i = 0; i < (int) categories.size(); i++) {
+        std::string category = categories[i].str();
         ss << categories[i].str();
         if (i == (int) categories.size()-1) {
             ss << "}";

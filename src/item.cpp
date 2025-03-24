@@ -190,17 +190,26 @@ bool operator== (const Item &lhs, const Item &rhs) {
 // Example:
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
-std::string Item::str() const{
+std::string Item::str() {
     std::cout << "calling item str\n";
-    json j = to_json();    
-    return j;
+    std::stringstream ss;
+    json j;
+    to_json(j, *this);
+    std::cout << "returning item str\n";
+    //j needs to be turned into a string
+    ss << j;
+    return ss.str();
 }
 
-json Item::to_json() const{
-    std::cout << "calling item to json\n";
-    json j = json{{"identifier", identifier}, {"amount", amount}, 
-    {"date", date.str()}, {"description", description}, {"tags", tagString()}};
-    return j;
+void Item::to_json(json& j, const Item& item) {
+    j = json{{identifierStr, item.identifier}, {descriptionStr, description}, {amountStr, amount}, {dateStr, date.str()}, {tagsStr, tags}};
+}
+
+void Item::from_json(const json& j, Item& item) {
+    j.at(identifierStr).get_to(item.identifier);
+    j.at(descriptionStr).get_to(item.description);
+    j.at(amountStr).get_to(item.amount);
+    j.at(dateStr).get_to(date);
 }
 
 //returns the items tags as a string for json representation

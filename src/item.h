@@ -21,11 +21,17 @@
 #include <sstream>
 
 #include "date.h"
-#include "lib_json.hpp"
 
+#include "lib_json.hpp"
 using json = nlohmann::json;
 
 static const std::string tagNotFoundError = "Error: tag was not found";
+static const std::string identifierStr = "identifier";
+static const std::string descriptionStr = "description";
+static const std::string amountStr = "amount";
+static const std::string dateStr = "date";
+static const std::string tagsStr = "tags";
+
 class Item {
 public:
     Item(const std::string& identifier, const std::string& description, const double& amount, const Date& date);
@@ -41,7 +47,9 @@ public:
     void setAmount(const float &amount);
     Date getDate() const;
     void setDate(const Date &date);
-    std::string str() const;
+    std::string str();
+    void to_json(json& j, const Item& item);
+    void from_json(const json& j, Item& item);
     
     std::string getTag(int index) const;
 

@@ -23,10 +23,6 @@
 
 static const std::string etRuntimeError = "et runtime error";
 static const std::string etOOR = "et out of range error";
-static const std::string descriptionStr = "description";
-static const std::string amountStr = "amount";
-static const std::string tagsStr = "tags";
-static const std::string dateStr = "date";
 static const std::string categoriesStr = "categories";
 
 class ExpenseTracker {
@@ -39,9 +35,10 @@ public:
     bool deleteCategory(const std::string &categoryIdent);
     double getSum() const;
     void load(const std::string &DbFileName);
-    void save(const std::string &filePath) const;
-    std::string str() const;
-    std::string categoryString() const;
+    void save(const std::string &filePath);
+    std::string str();
+    std::string categoryString();
+    void to_json(json& j, ExpenseTracker& et);
 
     friend bool operator==(const ExpenseTracker &lhs, const ExpenseTracker &rhs);
 
