@@ -29,7 +29,7 @@ class ExpenseTracker {
 public:
     ExpenseTracker();
     unsigned int size() const;
-    Category newCategory(const std::string &categoryIdent);
+    Category& newCategory(const std::string &categoryIdent);
     bool addCategory(const Category &category);
     Category& getCategory(const std::string &categoryIdent);
     bool deleteCategory(const std::string &categoryIdent);

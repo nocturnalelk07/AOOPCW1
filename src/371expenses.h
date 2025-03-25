@@ -25,6 +25,7 @@ static const std::string deleteStr = "DELETE";
 static const std::string updateStr = "UPDATE";
 static const std::string categoryStr = "category";
 static const std::string itemStr = "item";
+static const std::string dateCapsStr = "date";
 
 namespace App {
 
@@ -62,6 +63,7 @@ std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string 
 
 void chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &et);
 void createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
+Item createNewItem(const std::string &itemIdent, const std::string &itemDesc, const double &amount, const Date &date, const std::string &tags);
 
 } // namespace App
 

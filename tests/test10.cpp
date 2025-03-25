@@ -87,7 +87,7 @@ SCENARIO(
         THEN("no exception is thrown") {
 
           REQUIRE_NOTHROW(App::run(argc, argv));
-
+          
           AND_WHEN("loading the saved file into a new ExpenseTracker object") {
 
             ExpenseTracker etObj1{};
@@ -131,6 +131,7 @@ SCENARIO(
 
               THEN("no exception is thrown") {
 
+                std::cout << "running with item arguments\n";
                 REQUIRE_NOTHROW(App::run(argc, argv));
 
                 AND_WHEN(

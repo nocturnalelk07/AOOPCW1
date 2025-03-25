@@ -9,7 +9,9 @@
 
 #include "371expenses.h"
 #include "lib_cxxopts.hpp"
+#include "item.h"
 #include <iostream>
+#include <string.h>
 #include <cstring>
 
 // TODO Complete this function. You have been provided some skeleton code which
@@ -55,7 +57,7 @@ int App::run(int argc, char *argv[]) {
       case Action::CREATE:
         //creates a new category in the expense tracker with an ident equal to the argument, or do nothing if category already exists. output nothing and exit 0
         createNewCategory(args, etObj);
-
+        etObj.save(db);
         break;
       case Action::JSON:
         //decide which getJson method to use then call it
@@ -123,7 +125,7 @@ cxxopts::Options App::cxxoptsSetup() {
       "amount argument to the updated expense amount.",
       cxxopts::value<std::string>())(
 
-      "Date",
+      "date",
       "When creating or updating an expense item, set the Date flag to change "
       "the expense item's Date to the one specified as an argument (e.g. "
       "'2024-11-23'). If the Date argument is ommitted set the expense Date "
@@ -267,8 +269,14 @@ void App::chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &etObj)
 void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &etObj) {
   bool categoryExists = false;
   std::string categoryIdent;
+  std::string categoryItemId;
+  double categoryItemAmount = 0;
+  std::string categoryItemDesc;
+  std::string categoryItemDate;
+  std::string categoryItemTag;
+  Date date;
 
-  //get the category value
+  //get the category value, which there will always be or throw an error
   categoryIdent = args[categoryStr].as<std::string>();
 
   //if the category exists an exception will be thrown and the code will not execute
@@ -276,11 +284,69 @@ void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et
     etObj.getCategory(categoryIdent);
     categoryExists = true;
   } catch (...) {
-    //do nothing
+    categoryExists = false;
   }
 
   //if the category doesnt exist then create it
   if (!categoryExists) {
     etObj.newCategory(categoryIdent);
   }
+
+    std::cout << "category was created successfully";
+    //get all the items' values that we need
+    try {
+    categoryItemId = args["item"].as<std::string>();
+    } catch (...) {
+    }
+
+    try {
+    categoryItemAmount = stoi(args["amount"].as<std::string>());
+    categoryItemAmount = round(categoryItemAmount * 100) / 100;
+    } catch (...) {
+    }
+
+    try {
+    categoryItemDesc = args["description"].as<std::string>();
+
+    } catch (...) {
+    }
+
+    try {
+    categoryItemDate = args[dateCapsStr].as<std::string>();
+    if(categoryItemDate.empty()) {
+      //if no date provided then use current date
+      date = Date();
+    } else {
+      date = Date(categoryItemDate);
+    }
+    categoryItemTag = args[tagStr].as<std::string>();
+    } catch (...) {
+    }
+  
+    //call the method to create a new item and add it to the category
+    if (!(categoryItemId.empty() || categoryItemDesc.empty() || categoryItemAmount == 0)) {
+    etObj.getCategory(categoryIdent).addItem(createNewItem(categoryItemId, categoryItemDesc,
+       categoryItemAmount, categoryItemDate, categoryItemTag));
+    }
+  
+}
+
+//creates a new item and adds it to the given category
+Item App::createNewItem(const std::string &itemIdent, const std::string &itemDesc,
+   const double &amount, const Date &date, const std::string &tags) {
+
+    Item inputItem = Item(itemIdent, itemDesc, amount, date);
+
+    if (!tags.empty()) {
+      std::stringstream ss;
+      char delimiter = ',';
+      std::string tempS;
+      ss << tags;
+      //loop through and add the tags
+      while (getline(ss, tempS, delimiter)) {
+        inputItem.addTag(tempS);
+      }
+      }
+
+      return inputItem;
 }

@@ -31,6 +31,7 @@ static const std::string descriptionStr = "description";
 static const std::string amountStr = "amount";
 static const std::string dateStr = "date";
 static const std::string tagsStr = "tags";
+static const std::string tagStr = "tag";
 
 class Item {
 public:

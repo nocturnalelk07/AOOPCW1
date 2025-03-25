@@ -38,7 +38,7 @@ unsigned int ExpenseTracker::size() const{
 // Example:
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
-Category ExpenseTracker::newCategory(const std::string &ident) {
+Category& ExpenseTracker::newCategory(const std::string &ident) {
     //std::cout << "calling et new category\n";
     //return the category if it already exists
     for (int i = 0; i < (int) categories.size(); i++){
@@ -49,7 +49,7 @@ Category ExpenseTracker::newCategory(const std::string &ident) {
     try {
         Category category = Category(ident); 
         categories.push_back(category);
-        return category;
+        return categories.back();
     } catch(...) {
     throw std::runtime_error(etRuntimeError);
     }
@@ -156,7 +156,7 @@ double ExpenseTracker::getSum() const {
     return sum;
 }
 
-// TODO Write a function, load, that takes one parameter, a std::string,
+// DONE Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
 //  and populates the container for this ExpenseTracker. If the file does not open throw
 //  an appropriate exception (either std::runtime_error or a derived class).
@@ -260,6 +260,7 @@ void ExpenseTracker::load(const std::string &file) {
             } // leave item loop
 
             //add the category to the et
+            newCategory(ident);
             addCategory(category);
 
         } //leave category loop
