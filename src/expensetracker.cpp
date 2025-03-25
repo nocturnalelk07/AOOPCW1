@@ -321,34 +321,23 @@ bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
 //  std::string s = etObj.str();
 std::string ExpenseTracker::str() {
     std::cout << "calling et str\n";
-    std::stringstream ss;
     json j;
     to_json(j, *this);
-    ss << j;
     std::cout << "returning et str\n";
-    return ss.str();
+    return j.dump();
 }
 
 //converts to json
 //TODO
 void ExpenseTracker::to_json(json& j, ExpenseTracker& et) {
-    j = json{{categoriesStr, et.categoryString()}};
+    j = json({et.categoryString()});
 }
 
 //formats categories vector into a json style string
 std::string ExpenseTracker::categoryString() {
-    std::cout << "calling et category string\n";
     std::stringstream ss;
-    ss << "{";
-    for (int i = 0; i < (int) categories.size(); i++) {
-        std::string category = categories[i].str();
-        ss << categories[i].str();
-        if (i == (int) categories.size()-1) {
-            ss << "}";
-        } else {
-            ss << ",";
-        }
+    for(int i = 0; i < (int) categories.size(); i++) {
+        ss << categories.at(i).str();
     }
     return ss.str();
-    
 }

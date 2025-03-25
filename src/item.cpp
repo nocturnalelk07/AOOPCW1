@@ -192,17 +192,20 @@ bool operator== (const Item &lhs, const Item &rhs) {
 //  std::string s = iObj.str();
 std::string Item::str() {
     std::cout << "calling item str\n";
-    std::stringstream ss;
     json j;
     to_json(j, *this);
-    std::cout << "returning item str\n";
-    //j needs to be turned into a string
-    ss << j;
-    return ss.str();
+    std::cout << "returning item str: \n" << j.dump(2) << std::endl;
+    
+    return j.dump();
 }
 
 void Item::to_json(json& j, const Item& item) {
-    j = json{{identifierStr, item.identifier}, {descriptionStr, description}, {amountStr, amount}, {dateStr, date.str()}, {tagsStr, tags}};
+    //j[identifier][descriptionStr] = description;
+    //j[identifier][descriptionStr][amountStr] = description;
+    //this looks most correct so far
+    //j[identifier] = { {descriptionStr, description}, {amountStr, amount} };
+
+    j[identifier] = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
 }
 
 void Item::from_json(const json& j, Item& item) {
@@ -215,17 +218,8 @@ void Item::from_json(const json& j, Item& item) {
 //returns the items tags as a string for json representation
 std::string Item::tagString() const {
     std::cout << "calling item tag string\n";
-    std::stringstream ss;
-    ss << "[";
-    for (int i = 0; i < (int) tags.size(); i++) {
-        ss << "\"" << tags[i] << "\"";
-        if (i == (int) tags.size()-1 /**if this will be the last loop*/) {
-            ss << "]";
-        } else {
-            ss << ",";
-        }
-    }
-    return ss.str();
+    json j = json{{tags}};
+    return j.dump();
 }
 
 std::string Item::getTag(int index) const {

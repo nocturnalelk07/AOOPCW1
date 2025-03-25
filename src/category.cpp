@@ -223,27 +223,20 @@ std::string Category::str() {
 
 //converts to json
 void Category::to_json(json& j, Category& c) {
-    j = json{{identifierStr, c.identifier}, {itemsStr, c.getItemString()}};
+    j = json({c.identifier, c.getItemString()});
 }
 
 //converts the items vector into a string for the to_json
 std::string Category::getItemString() {
     std::stringstream ss;
     for (int i = 0; i < (int) items.size(); i++) {
-        std::string it = items.at(i).str();
-        ss << it;
-        if (i == (int) items.size()-1) {
-            ss << "}";
-        } else {
-            ss << ",";
-        }
+        ss << items.at(i).str();
     }
     return ss.str();
 }
 
 void Category::from_json(const json& j, Category& c) {
     j.at(identifierStr).get_to(identifier);
-    //j.at(itemsStr).get_to(items);
 }
 
 std::vector<Item> Category::getItems() const {
