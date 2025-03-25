@@ -32,7 +32,7 @@ public:
     void setIdent(const std::string &ident);
     Item newItem(const std::string &itemIdent, const std::string &desc, const double &amount, const Date &date);
     bool addItem(const Item &item);
-    Item getItem(const std::string &ident) const;
+    Item& getItem(const std::string &ident);
     std::vector<Item> getItems() const;
     double getSum() const;
     bool deleteItem(const std::string &ident);

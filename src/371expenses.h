@@ -64,6 +64,7 @@ std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string 
 void chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &et);
 void createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
 Item createNewItem(const std::string &itemIdent, const std::string &itemDesc, const double &amount, const Date &date, const std::string &tags);
+void deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
 
 } // namespace App
 

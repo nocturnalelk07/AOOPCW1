@@ -67,7 +67,9 @@ int App::run(int argc, char *argv[]) {
         throw std::runtime_error("update not implemented");
         break;
       case Action::DELETE:
-        throw std::runtime_error("delete not implemented");
+        //delete a category if it exists
+        deleteCategory(args, etObj);
+        etObj.save(db);
         break;
       case Action::SUM:
         throw std::runtime_error("sum not implemented");
@@ -295,18 +297,18 @@ void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et
     std::cout << "category was created successfully";
     //get all the items' values that we need
     try {
-    categoryItemId = args["item"].as<std::string>();
+    categoryItemId = args[itemStr].as<std::string>();
     } catch (...) {
     }
 
     try {
-    categoryItemAmount = stoi(args["amount"].as<std::string>());
+    categoryItemAmount = stoi(args[amountStr].as<std::string>());
     categoryItemAmount = round(categoryItemAmount * 100) / 100;
     } catch (...) {
     }
 
     try {
-    categoryItemDesc = args["description"].as<std::string>();
+    categoryItemDesc = args[descriptionStr].as<std::string>();
 
     } catch (...) {
     }
@@ -349,4 +351,37 @@ Item App::createNewItem(const std::string &itemIdent, const std::string &itemDes
       }
 
       return inputItem;
+}
+
+void App::deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et) {
+  std::string categoryIdent;
+  std::string ItemIdent;
+  std::string tagIdent;
+
+  try {
+    categoryIdent = args[categoryStr].as<std::string>();
+  } catch (...) {
+  }
+  try {
+    ItemIdent = args[itemStr].as<std::string>();
+  } catch (...) {
+  }
+  try {
+    tagIdent = args[tagStr].as<std::string>();
+  } catch (...) {
+  }
+
+  if (!categoryIdent.empty()) {
+    if (!ItemIdent.empty()) {
+      if (!tagIdent.empty()) {
+        et.getCategory(categoryIdent).getItem(ItemIdent).deleteTag(tagIdent);
+        std::cout << et.getCategory(categoryIdent).getItem(ItemIdent).str();
+      } else {
+        et.getCategory(categoryIdent).deleteItem(ItemIdent);
+      }
+    } else {
+      et.deleteCategory(categoryIdent);
+    }
+  }
+  
 }

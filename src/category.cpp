@@ -135,7 +135,7 @@ bool Category::addItem(const Item &item) {
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("newItemName");
 //  auto iObj = cObj.getItem("newItemName");
-Item Category::getItem(const std::string &identifier) const {
+Item& Category::getItem(const std::string &identifier) {
     //std::cout << "calling category get item\n";
     for (int i = 0; i < (int) items.size(); i++) {
         if (identifier == items[i].getIdent()) {

@@ -94,11 +94,16 @@ bool Item::addTag(const std::string &inputTag) {
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
 bool Item::deleteTag(const std::string &inputTag) {
-    //std::cout << "calling item delete tag\n";
+    std::cout << "calling item delete tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
             tags.erase(tags.begin() + i);
+            std::stringstream ss;
+            for (std::string tag : tags) {
+                ss << tag;
+            }
+            std::cout << "tag deleted: " << inputTag << " tags now contain: " << ss.str() << std::endl;
             return true;
         }
     }
