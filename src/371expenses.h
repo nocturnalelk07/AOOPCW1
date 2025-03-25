@@ -60,6 +60,9 @@ std::string getJSON(ExpenseTracker &et);
 std::string getJSON(ExpenseTracker &et, const std::string &c);
 std::string getJSON(ExpenseTracker &et, const std::string &c, const std::string &id);
 
+void chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &et);
+void createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
+
 } // namespace App
 
 #endif // _371EXPENSES_H

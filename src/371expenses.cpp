@@ -50,40 +50,16 @@ int App::run(int argc, char *argv[]) {
 
     // try parsing arguments and exit if there is an exception
     const Action a = parseActionArgument(args);
-    std::string inputCat;
+    
     switch (a) {
       case Action::CREATE:
-        throw std::runtime_error("create not implemented");
+        //creates a new category in the expense tracker with an ident equal to the argument, or do nothing if category already exists. output nothing and exit 0
+        createNewCategory(args, etObj);
+
         break;
       case Action::JSON:
-        //std::cout << "taking the json action\n";
         //decide which getJson method to use then call it
-        //if there is no category argument an exception is caught and ignored (the string will remain empty)
-        inputCat = "";
-        try {
-          inputCat = args[categoryStr].as<std::string>();
-        } catch(...) {
-
-        }
-
-        //if there is a category in the command either call json with category or with category and item
-        if (!inputCat.empty()) {
-          std::string inputIt;
-          try {
-            inputIt = args[itemStr].as<std::string>();
-          } catch (...) {
-
-          }
-
-          //if there is an item in the command call get with category and item
-          if (!inputIt.empty()) {
-            std::cout << getJSON(etObj, inputCat, inputIt);
-          } else {
-            std::cout << getJSON(etObj, inputCat);
-          } 
-        } else {
-          std::cout << getJSON(etObj);
-          }
+        chooseGetJson(args, etObj);
         break;
       case Action::UPDATE:
         throw std::runtime_error("update not implemented");
@@ -258,4 +234,53 @@ std::string App::getJSON(ExpenseTracker &etObj,
   auto iObj = etObj.getCategory(c).getItem(id);
   //std::cout << "outputting item obj " << iObj.str() << std::endl;
   return iObj.str();
+}
+
+//chooses the correct form of getJson to call and output
+void App::chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &etObj) {
+  std::string inputCat;
+  //if there is no category argument an exception is caught and ignored (the string will remain empty)
+  inputCat = "";
+  try {
+    inputCat = args[categoryStr].as<std::string>();
+  } catch(...) {
+  }
+  //if there is a category in the command either call json with category or with category and item
+  if (!inputCat.empty()) {
+    std::string inputIt;
+    try {
+      inputIt = args[itemStr].as<std::string>();
+    } catch (...) {
+    }
+    //if there is an item in the command call get with category and item
+    if (!inputIt.empty()) {
+      std::cout << getJSON(etObj, inputCat, inputIt);
+    } else {
+      std::cout << getJSON(etObj, inputCat);
+    } 
+  } else {
+    std::cout << getJSON(etObj);
+    }
+}
+
+//creates a new category from input if not already exists
+void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &etObj) {
+  bool categoryExists = false;
+  std::string categoryIdent;
+
+  //get the category value
+  categoryIdent = args[categoryStr].as<std::string>();
+
+  //if the category exists an exception will be thrown and the code will not execute
+  try {
+    etObj.getCategory(categoryIdent);
+    categoryExists = true;
+  } catch (...) {
+    //do nothing
+  }
+
+  //if the category doesnt exist then create it
+  if (!categoryExists) {
+    etObj.newCategory(categoryIdent);
+  }
 }
