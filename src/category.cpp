@@ -231,10 +231,10 @@ void Category::to_json(json& j, Category& c) {
     //j[identifier]+= json::object_t::value_type{items.at(0).getIdent(), itemJson};
 
     for (int i = 0; i < (int) items.size(); i++) {
+        std::cout << "looping\n";
         items.at(i).to_json(itemJson, items.at(i));
-        j[identifier].push_back(json::object_t::value_type{items.at(i).getIdent(), itemJson});
+        j.push_back(json::object_t::value_type{items.at(i).getIdent(), itemJson});
     }
-    
 
 }
 

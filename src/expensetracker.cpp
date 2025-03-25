@@ -287,6 +287,7 @@ void ExpenseTracker::save(const std::string &filePath) {
     //serialise the object to json
     std::string string = str();
     out << string;
+    std::cout << string << std::endl;
     out.close();
 }
 
@@ -323,14 +324,19 @@ std::string ExpenseTracker::str() {
     std::cout << "calling et str\n";
     json j;
     to_json(j, *this);
-    std::cout << "returning et str\n";
     return j.dump();
 }
 
 //converts to json
 //TODO
 void ExpenseTracker::to_json(json& j, ExpenseTracker& et) {
-    j = json({et.categoryString()});
+    json categoryJson;
+
+    for (int i = 0; i < (int) categories.size(); i++) {
+        categories.at(i).to_json(categoryJson, categories.at(i));
+        j.push_back(json::object_t::value_type{categories.at(i).getIdent(), categoryJson});
+        categoryJson.clear();
+    }
 }
 
 //formats categories vector into a json style string
