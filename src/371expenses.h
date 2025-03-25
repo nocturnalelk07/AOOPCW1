@@ -18,6 +18,14 @@
 #include "lib_cxxopts.hpp"
 #include "expensetracker.h"
 
+static const std::string jsonStr = "JSON";
+static const std::string sumStr = "SUM";
+static const std::string createStr = "CREATE";
+static const std::string deleteStr = "DELETE";
+static const std::string updateStr = "UPDATE";
+static const std::string categoryStr = "category";
+static const std::string itemStr = "item";
+
 namespace App {
 
 // TODO: Enter your student number here!

@@ -15,7 +15,7 @@
 // Example:
 //  ExpenseTracker etObj{};
 ExpenseTracker::ExpenseTracker() {
-    std::cout << "et constructor---- \n";
+    //std::cout << "et constructor---- \n";
 }
 
 // DONE Write a function, size, that takes no parameters and returns an unsigned
@@ -25,7 +25,7 @@ ExpenseTracker::ExpenseTracker() {
 //  ExpenseTracker etObj{};
 //  auto size = etObj.size();
 unsigned int ExpenseTracker::size() const{
-    std::cout << "calling et Size \n";
+    //std::cout << "calling et Size \n";
     return categories.size();
 }
 
@@ -39,7 +39,7 @@ unsigned int ExpenseTracker::size() const{
 //  ExpenseTracker etObj{};
 //  etObj.newCategory("categoryIdent");
 Category ExpenseTracker::newCategory(const std::string &ident) {
-    std::cout << "calling et new category\n";
+    //std::cout << "calling et new category\n";
     //return the category if it already exists
     for (int i = 0; i < (int) categories.size(); i++){
         if (categories[i].getIdent() == ident) {
@@ -67,7 +67,7 @@ Category ExpenseTracker::newCategory(const std::string &ident) {
 //  Category cObj{"categoryIdent"};
 //  etObj.addCategory(cObj);
 bool ExpenseTracker::addCategory(const Category &category) {
-    std::cout << "calling et add category\n";
+    //std::cout << "calling et add category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == category.getIdent()) {
             for (int j = 0; j < (int) category.size(); j++)
@@ -75,7 +75,7 @@ bool ExpenseTracker::addCategory(const Category &category) {
                 //adds the item from the given category to the existing one
                 
                 std::vector<Item> newItems = category.getItems();
-                std::cout << "adding " << newItems[j].str() << "to category\n";
+                //std::cout << "adding " << newItems[j].str() << "to category\n";
                 categories[i].addItem(newItems[j]);
             }
             //override any other values here
@@ -100,17 +100,17 @@ bool ExpenseTracker::addCategory(const Category &category) {
 //  etObj.newCategory("categoryIdent");
 //  auto cObj = etObj.getCategory("categoryIdent");
 Category& ExpenseTracker::getCategory(const std::string &ident) {
-    std::cout << "calling et get category\n";
+    //std::cout << "calling et get category\n";
     //loop through the categories in the expense tracker looking for the right one
     for (int i = 0; i < (int) categories.size(); i++) {
         categories[i].size();
         if (categories[i].getIdent() == ident) {
-            std::cout << "leaving get category with: " << categories[i].getIdent() << "\n";
+            //std::cout << "leaving get category with: " << categories[i].getIdent() << "\n";
             categories[i].size();
             return categories[i];
         }
     }
-    std::cout << "throwing get category: \n";
+    //std::cout << "throwing get category: \n";
     throw std::out_of_range(etOOR);
 }
 
@@ -124,7 +124,7 @@ Category& ExpenseTracker::getCategory(const std::string &ident) {
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
 bool ExpenseTracker::deleteCategory(const std::string &ident) {
-    std::cout << "calling et delete category\n";
+    //std::cout << "calling et delete category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == ident) {
             categories.erase(categories.begin() + i);
@@ -148,7 +148,7 @@ bool ExpenseTracker::deleteCategory(const std::string &ident) {
 //  cObj2.newItem("newItemName4", "Description", "4.0", Date(2024,12,25));
 //  auto sum = ejObj.getSum() // 10.0
 double ExpenseTracker::getSum() const {
-    std::cout << "calling et get sum\n";
+    //std::cout << "calling et get sum\n";
     double sum = 0;
     for (int i = 0; i < (int) categories.size(); i++) {
         sum += categories[i].getSum();
@@ -220,7 +220,7 @@ double ExpenseTracker::getSum() const {
 //  ExpenseTracker etObj{};
 //  etObj.load("database.json");
 void ExpenseTracker::load(const std::string &file) {
-    std::cout << "calling et load\n";
+    //std::cout << "calling et load\n";
 
     
     try {
@@ -228,7 +228,7 @@ void ExpenseTracker::load(const std::string &file) {
         std::ifstream in(file);
         //read the contents of the file parsed as json
         json data = json::parse(in);
-        std::cout << data << std::endl;
+        //std::cout << data << std::endl;
 
         //populate the container for this expense tracker by looping through the json
         //this should add a category (and all the categories' data) each loop
@@ -279,7 +279,7 @@ void ExpenseTracker::load(const std::string &file) {
 //  ...
 //  etObj.save("database.json");
 void ExpenseTracker::save(const std::string &filePath) {
-    std::cout << "calling et save\n";
+    //std::cout << "calling et save\n";
     
     //find the file from the filepath and open an output stream
     std::ofstream out(filePath);
@@ -287,7 +287,7 @@ void ExpenseTracker::save(const std::string &filePath) {
     //serialise the object to json
     std::string string = str();
     out << string;
-    std::cout << string << std::endl;
+    //std::cout << string << std::endl;
     out.close();
 }
 
@@ -301,7 +301,7 @@ void ExpenseTracker::save(const std::string &filePath) {
 //    ...
 //  }
 bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
-    std::cout << "et == operator \n";
+    //std::cout << "et == operator \n";
     bool isEqual = true;
     if (lhs.categories == rhs.categories) {
     } else {
@@ -321,7 +321,7 @@ bool operator== (const ExpenseTracker &lhs, const ExpenseTracker &rhs) {
 //  ExpenseTracker etObj{};
 //  std::string s = etObj.str();
 std::string ExpenseTracker::str() {
-    std::cout << "calling et str\n";
+    //std::cout << "calling et str\n";
     json j;
     to_json(j, *this);
     return j.dump();
@@ -337,13 +337,4 @@ void ExpenseTracker::to_json(json& j, ExpenseTracker& et) {
         j.push_back(json::object_t::value_type{categories.at(i).getIdent(), categoryJson});
         categoryJson.clear();
     }
-}
-
-//formats categories vector into a json style string
-std::string ExpenseTracker::categoryString() {
-    std::stringstream ss;
-    for(int i = 0; i < (int) categories.size(); i++) {
-        ss << categories.at(i).str();
-    }
-    return ss.str();
 }

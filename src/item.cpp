@@ -15,7 +15,7 @@
 // Example:
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 Item::Item(const std::string& inputIdentifier, const std::string& inputDescription, const double& inputAmount, const Date& inputDate) {
-    std::cout << "in item constructor \n";
+    //std::cout << "in item constructor \n";
     identifier = inputIdentifier;
     description = inputDescription;
     amount = inputAmount;
@@ -24,7 +24,7 @@ Item::Item(const std::string& inputIdentifier, const std::string& inputDescripti
 
 Item::Item(const std::string& inputIdentifier, const std::string& inputDescription, const double& inputAmount, const Date& inputDate,
      const std::vector<std::string>& inputTags) {
-    std::cout << "in item constructor \n";
+    //std::cout << "in item constructor \n";
     identifier = inputIdentifier;
     description = inputDescription;
     amount = inputAmount;
@@ -38,7 +38,7 @@ Item::Item(const std::string& inputIdentifier, const std::string& inputDescripti
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getIdent();
 std::string Item::getIdent() const {
-    std::cout << "calling item get ident\n";
+    //std::cout << "calling item get ident\n";
     return identifier;
 }
 
@@ -48,7 +48,7 @@ std::string Item::getIdent() const {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.getDescription();
 std::string Item::getDescription() const {
-    std::cout << "calling item get description\n";
+    //std::cout << "calling item get description\n";
     return description;
 }
 
@@ -59,7 +59,7 @@ std::string Item::getDescription() const {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  auto ident = iObj.setDescription("New Item Description");
 void Item::setDescription(const std::string &inputDescription) {
-    std::cout << "calling item set description\n";
+    //std::cout << "calling item set description\n";
     description = inputDescription;
 }
 
@@ -71,7 +71,7 @@ void Item::setDescription(const std::string &inputDescription) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.addTag("tag");
 bool Item::addTag(const std::string &inputTag) {
-    std::cout << "calling item add tag\n";
+    //std::cout << "calling item add tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -94,7 +94,7 @@ bool Item::addTag(const std::string &inputTag) {
 //  iObj.addTag("tag");
 //  iObj.deleteTag("tag");
 bool Item::deleteTag(const std::string &inputTag) {
-    std::cout << "calling item delete tag\n";
+    //std::cout << "calling item delete tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -112,7 +112,7 @@ bool Item::deleteTag(const std::string &inputTag) {
 //  Item iObj{"1", "Description", 1.99, Date(2024,12,25)};
 //  iObj.numTags(); // 0
 unsigned int Item::numTags() const {
-    std::cout << "calling item num tags\n";
+    //std::cout << "calling item num tags\n";
     return tags.size();
 }
 
@@ -124,7 +124,7 @@ unsigned int Item::numTags() const {
 //  iObj.addTag("tag");
 //  iObj.containsTag("tag"); // true
 bool Item::containsTag(const std::string &inputTag) const {
-    std::cout << "calling item contains tag\n";
+    //std::cout << "calling item contains tag\n";
 
     for (int i = 0; i < (int) tags.size(); i++) {
         if (tags[i] == inputTag) {
@@ -136,29 +136,30 @@ bool Item::containsTag(const std::string &inputTag) const {
 
 // DONE Write a function, getAmount, that returns the amount for the Item.
 double Item::getAmount() const {
-    std::cout << "calling item get amount\n";
+    //std::cout << "calling item get amount\n";
     return amount;
 }
 
 // DONE Write a function setAmount, that takes one parameter, a double for
 // a new amount, and updates the member variable. It returns nothing.
 void Item::setAmount(const float &inputAmount) {
-    std::cout << "calling item set amount\n";
+    //std::cout << "calling item set amount\n";
     amount = inputAmount;
 }
 
 // DONE Write a function, getDate, that returns the date for the Item.
 Date Item::getDate() const {
-    std::cout << "calling item get date\n";
+    //std::cout << "calling item get date\n";
     return date;
 }
 
 // DONE Write a function setDate, that takes one parameter, a date, and updates
 // the member variable. It returns nothing.
 void Item::setDate(const Date &inputDate) {
-    std::cout << "calling item set date\n";
+    //std::cout << "calling item set date\n";
     Date date = inputDate;
-    std::cout << date.str();
+    date = date;
+    //std::cout << date.str();
 }
 
 // DONE Write an == operator overload for the Item class, such that two
@@ -171,7 +172,7 @@ void Item::setDate(const Date &inputDate) {
 //   ...
 //  }
 bool operator== (const Item &lhs, const Item &rhs) {
-    std::cout << "calling item ==\n";
+    //std::cout << "calling item ==\n";
     bool isEqual = false;
     if((lhs.identifier == rhs.identifier)
          && (lhs.description == rhs.description)
@@ -191,10 +192,10 @@ bool operator== (const Item &lhs, const Item &rhs) {
 //  Item iObj{"itemIdent"};
 //  std::string s = iObj.str();
 std::string Item::str() {
-    std::cout << "calling item str\n";
+    //std::cout << "calling item str\n";
     json j;
     to_json(j, *this);
-    std::cout << "returning item str: \n" << j.dump(2) << std::endl;
+    //std::cout << "returning item str: \n" << j.dump(2) << std::endl;
     
     return j.dump();
 }
@@ -206,7 +207,9 @@ void Item::to_json(json& j, const Item& item) {
     //j[identifier] = { {descriptionStr, description}, {amountStr, amount} };
 
     //j[identifier] = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
-    j = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
+    double jAmount = amount;
+    jAmount = std::round(jAmount * 100) / 100;
+    j = { {amountStr, jAmount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
 }
 
 void Item::from_json(const json& j, Item& item) {
@@ -216,14 +219,7 @@ void Item::from_json(const json& j, Item& item) {
     j.at(dateStr).get_to(date);
 }
 
-//returns the items tags as a string for json representation
-std::string Item::tagString() const {
-    std::cout << "calling item tag string\n";
-    json j = json{{tags}};
-    return j.dump();
-}
-
 std::string Item::getTag(int index) const {
-    std::cout << "calling item get tag\n";
+    //std::cout << "calling item get tag\n";
     return tags[index];
 }

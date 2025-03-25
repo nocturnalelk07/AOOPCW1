@@ -38,7 +38,6 @@ public:
     bool deleteItem(const std::string &ident);
     std::string str();
     void to_json(json& j, Category& c);
-    json getItemString();
     void from_json(const json& j, Category& c);
 
     friend bool operator== (const Category &lhs, const Category &rhs);

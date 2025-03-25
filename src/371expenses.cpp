@@ -44,18 +44,46 @@ int App::run(int argc, char *argv[]) {
     // Open the database and construct the ExpenseTracker
     const std::string db = args["db"].as<std::string>();
 
-    // ExpenseTracker etObj{};
+    ExpenseTracker etObj{};
     // Only uncomment this once you have implemented the load function!
-    // etObj.load(db);
+    etObj.load(db);
 
     // try parsing arguments and exit if there is an exception
     const Action a = parseActionArgument(args);
+    std::string inputCat;
     switch (a) {
       case Action::CREATE:
         throw std::runtime_error("create not implemented");
         break;
       case Action::JSON:
-        throw std::runtime_error("json not implemented");
+        //std::cout << "taking the json action\n";
+        //decide which getJson method to use then call it
+        //if there is no category argument an exception is caught and ignored (the string will remain empty)
+        inputCat = "";
+        try {
+          inputCat = args[categoryStr].as<std::string>();
+        } catch(...) {
+
+        }
+
+        //if there is a category in the command either call json with category or with category and item
+        if (!inputCat.empty()) {
+          std::string inputIt;
+          try {
+            inputIt = args[itemStr].as<std::string>();
+          } catch (...) {
+
+          }
+
+          //if there is an item in the command call get with category and item
+          if (!inputIt.empty()) {
+            std::cout << getJSON(etObj, inputCat, inputIt);
+          } else {
+            std::cout << getJSON(etObj, inputCat);
+          } 
+        } else {
+          std::cout << getJSON(etObj);
+          }
         break;
       case Action::UPDATE:
         throw std::runtime_error("update not implemented");
@@ -151,26 +179,28 @@ cxxopts::Options App::cxxoptsSetup() {
 //  auto args = options.parse(argc, argv);
 //  App::Action action = parseActionArgument(args);
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
+
   std::string input = args["action"].as<std::string>();
+
   //uppers the input to be case insensitive
   std::transform(input.begin(), input.end(), input.begin(), ::toupper);
 
-  if (input == "JSON") {
+  if (input == jsonStr) {
     return Action::JSON;
-  } else if (input == "SUM") {
+  } else if (input == sumStr) {
     return Action::SUM;
-  }else if (input == "CREATE") {
+  }else if (input == createStr) {
     return Action::CREATE;
-  }else if (input == "DELETE") {
+  }else if (input == deleteStr) {
     return Action::DELETE;
-  }else if (input == "UPDATE") {
+  }else if (input == updateStr) {
     return Action::UPDATE;
   }else {
     throw std::invalid_argument("action");
   }
 }
 
-// TODO Write a function, getJSON, that returns a std::string containing the
+// DONE Write a function, getJSON, that returns a std::string containing the
 // JSON representation of a ExpenseTracker object.
 //
 // This function has been implemented for you, but you may wish to adjust it.
@@ -182,12 +212,12 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 //  ExpenseTracker etObj{};
 //  std::cout << getJSON(etObj);
 std::string App::getJSON(ExpenseTracker &etObj) {
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // return etObj.str();
+  //std::cout << "outputting etobj " << etObj.str() << std::endl;
+  return etObj.str();
 }
 
-// TODO Write a function, getJSON, that returns a std::string containing the
+// DONE Write a function, getJSON, that returns a std::string containing the
 //  JSON representation of a specific Category in a ExpenseTracker object.
 //
 // This function has been implemented for you, but you may wish to adjust it.
@@ -201,13 +231,13 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 //  std::string c = "category argument value";
 //  std::cout << getJSON(etObj, c);
 std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto cObj = etObj.getCategory(c);
-  // return cObj.str();
+  auto cObj = etObj.getCategory(c);
+  //std::cout << "outputting cat obj " << cObj.str() << std::endl;
+  return cObj.str();
 }
 
-// TODO Write a function, getJSON, that returns a std::string containing the
+// DONE Write a function, getJSON, that returns a std::string containing the
 //  JSON representation of a specific ExpenseItem in a ExpenseTracker object.
 //
 // This function has been implemented for you, but you may wish to adjust it.
@@ -224,8 +254,8 @@ std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
 std::string App::getJSON(ExpenseTracker &etObj, 
                          const std::string &c,
                          const std::string &id) {
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto iObj = etObj.getCategory(c).getItem(id);
-  // return iObj.str();
+  auto iObj = etObj.getCategory(c).getItem(id);
+  //std::cout << "outputting item obj " << iObj.str() << std::endl;
+  return iObj.str();
 }
