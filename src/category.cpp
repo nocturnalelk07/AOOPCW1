@@ -213,26 +213,43 @@ bool operator== (const Category &lhs, const Category &rhs) {
 //  std::string s = cObj.str();
 std::string Category::str() {
     std::cout << "calling category str\n";
-    std::stringstream ss;
-    json j;
+    json j = json::object();
     to_json(j, *this);
-    ss << j;
-    std::cout << "returning category str\n";
-    return ss.str();
+    std::cout << "returning category str\n" << j.dump(2) << std::endl;
+    return j.dump();
 }
 
 //converts to json
 void Category::to_json(json& j, Category& c) {
-    j = json({c.identifier, c.getItemString()});
+    json itemJson;
+    //j[identifier]= { {items.at(0).getIdent(), itemJson}, {"item 2", 2} };
+
+    //this correctly appends item test 2 to the first item
+    //j[identifier]= { {items.at(0).getIdent(), itemJson} };
+    //j[identifier]+= json::object_t::value_type("item test", "test string");
+    //works as is j[identifier]+= json::object_t::value_type{"item test string object", itemJson};
+    //j[identifier]+= json::object_t::value_type{items.at(0).getIdent(), itemJson};
+
+    for (int i = 0; i < (int) items.size(); i++) {
+        items.at(i).to_json(itemJson, items.at(i));
+        j[identifier].push_back(json::object_t::value_type{items.at(i).getIdent(), itemJson});
+    }
+    
+
 }
 
 //converts the items vector into a string for the to_json
-std::string Category::getItemString() {
-    std::stringstream ss;
+json Category::getItemString() {
+    //json that will be returned
+    json j = json::object();
+    //json for a single item
+    json jItem;
     for (int i = 0; i < (int) items.size(); i++) {
-        ss << items.at(i).str();
+        
+        items.at(i).to_json(jItem, items.at(i));
+        j.push_back(json::object_t::value_type("test", 3));
     }
-    return ss.str();
+    return j;
 }
 
 void Category::from_json(const json& j, Category& c) {

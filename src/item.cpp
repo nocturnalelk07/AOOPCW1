@@ -205,7 +205,8 @@ void Item::to_json(json& j, const Item& item) {
     //this looks most correct so far
     //j[identifier] = { {descriptionStr, description}, {amountStr, amount} };
 
-    j[identifier] = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
+    //j[identifier] = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
+    j = { {amountStr, amount}, {dateStr, date.str()}, {descriptionStr, description}, {tagsStr, tags} };
 }
 
 void Item::from_json(const json& j, Item& item) {
