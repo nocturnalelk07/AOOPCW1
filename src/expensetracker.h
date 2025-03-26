@@ -22,7 +22,8 @@
 #include <utility>
 
 static const std::string etRuntimeError = "et runtime error";
-static const std::string etOOR = "et out of range error";
+static const std::string etOOR = "et out of range error fa";
+static const std::string invalidCatError = "Error: invalid category argument(s).";
 static const std::string categoriesStr = "categories";
 
 class ExpenseTracker {

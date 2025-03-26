@@ -26,6 +26,8 @@ static const std::string updateStr = "UPDATE";
 static const std::string categoryStr = "category";
 static const std::string itemStr = "item";
 static const std::string dateCapsStr = "date";
+static const std::string createMissingArgError = "Error: missing category, item, amount, description argument(s).";
+static const std::string jsonMissingCategoryError = "Error: missing category argument(s).";
 
 namespace App {
 
@@ -65,6 +67,7 @@ void chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &et);
 void createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
 Item createNewItem(const std::string &itemIdent, const std::string &itemDesc, const double &amount, const Date &date, const std::string &tags);
 void deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
+void sumCategory(const cxxopts::ParseResult &args, ExpenseTracker &et);
 
 } // namespace App
 

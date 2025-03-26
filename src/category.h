@@ -22,6 +22,7 @@
 
 static const std::string categoryRuntimeError = "category error at runtime";
 static const std::string categoryOOR = "category out of range error";
+static const std::string invalidItemError = "Error: invalid item argument(s).";
 static const std::string itemsStr = "items";
 
 class Category {

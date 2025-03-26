@@ -111,7 +111,7 @@ Category& ExpenseTracker::getCategory(const std::string &ident) {
         }
     }
     //std::cout << "throwing get category: \n";
-    throw std::out_of_range(etOOR);
+    throw std::out_of_range(invalidCatError);
 }
 
 // DONE Write a function, deleteCategory, that takes one parameter, a Category
@@ -124,7 +124,6 @@ Category& ExpenseTracker::getCategory(const std::string &ident) {
 //  etObj.newCategory("categoryIdent");
 //  etObj.deleteCategory("categoryIdent");
 bool ExpenseTracker::deleteCategory(const std::string &ident) {
-    //std::cout << "calling et delete category\n";
     for (int i = 0; i < (int) categories.size(); i++) {
         if (categories[i].getIdent() == ident) {
             categories.erase(categories.begin() + i);

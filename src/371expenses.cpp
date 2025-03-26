@@ -72,7 +72,8 @@ int App::run(int argc, char *argv[]) {
         etObj.save(db);
         break;
       case Action::SUM:
-        throw std::runtime_error("sum not implemented");
+        //sum a category, takes no other values
+        sumCategory(args, etObj);
         break;
       default:
         throw std::runtime_error("unknown action");
@@ -193,7 +194,6 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 //  std::cout << getJSON(etObj);
 std::string App::getJSON(ExpenseTracker &etObj) {
   // Only uncomment this once you have implemented the functions used!
-  //std::cout << "outputting etobj " << etObj.str() << std::endl;
   return etObj.str();
 }
 
@@ -213,7 +213,6 @@ std::string App::getJSON(ExpenseTracker &etObj) {
 std::string App::getJSON(ExpenseTracker &etObj, const std::string &c) {
   // Only uncomment this once you have implemented the functions used!
   auto cObj = etObj.getCategory(c);
-  //std::cout << "outputting cat obj " << cObj.str() << std::endl;
   return cObj.str();
 }
 
@@ -236,22 +235,23 @@ std::string App::getJSON(ExpenseTracker &etObj,
                          const std::string &id) {
   // Only uncomment this once you have implemented the functions used!
   auto iObj = etObj.getCategory(c).getItem(id);
-  //std::cout << "outputting item obj " << iObj.str() << std::endl;
   return iObj.str();
 }
 
 //chooses the correct form of getJson to call and output
 void App::chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &etObj) {
   std::string inputCat;
+  std::string inputIt;
   //if there is no category argument an exception is caught and ignored (the string will remain empty)
-  inputCat = "";
   try {
     inputCat = args[categoryStr].as<std::string>();
   } catch(...) {
   }
+
+
+
   //if there is a category in the command either call json with category or with category and item
   if (!inputCat.empty()) {
-    std::string inputIt;
     try {
       inputIt = args[itemStr].as<std::string>();
     } catch (...) {
@@ -259,11 +259,21 @@ void App::chooseGetJson(const cxxopts::ParseResult &args, ExpenseTracker &etObj)
     //if there is an item in the command call get with category and item
     if (!inputIt.empty()) {
       std::cout << getJSON(etObj, inputCat, inputIt);
-    } else {
+    } else if (!inputCat.empty()) {
       std::cout << getJSON(etObj, inputCat);
     } 
   } else {
     std::cout << getJSON(etObj);
+    }
+
+
+    //if an item is provided there must be a category, or throw an exception
+    if (!inputIt.empty()) {
+      if (!inputCat.empty()) {
+        //get a json item
+      } else {
+        throw std::out_of_range(jsonMissingCategoryError);
+      }
     }
 }
 
@@ -279,7 +289,13 @@ void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et
   Date date;
 
   //get the category value, which there will always be or throw an error
-  categoryIdent = args[categoryStr].as<std::string>();
+  try {
+    categoryIdent = args[categoryStr].as<std::string>();
+  } catch (...) {
+
+    throw std::out_of_range(createMissingArgError);
+  }
+  
 
   //if the category exists an exception will be thrown and the code will not execute
   try {
@@ -305,6 +321,7 @@ void App::createNewCategory(const cxxopts::ParseResult &args, ExpenseTracker &et
     categoryItemAmount = stoi(args[amountStr].as<std::string>());
     categoryItemAmount = round(categoryItemAmount * 100) / 100;
     } catch (...) {
+      std::cout << "exception caught stoi";
     }
 
     try {
@@ -353,6 +370,7 @@ Item App::createNewItem(const std::string &itemIdent, const std::string &itemDes
       return inputItem;
 }
 
+//deletes a category, item or tag based on input
 void App::deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et) {
   std::string categoryIdent;
   std::string ItemIdent;
@@ -375,7 +393,6 @@ void App::deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et) {
     if (!ItemIdent.empty()) {
       if (!tagIdent.empty()) {
         et.getCategory(categoryIdent).getItem(ItemIdent).deleteTag(tagIdent);
-        std::cout << et.getCategory(categoryIdent).getItem(ItemIdent).str();
       } else {
         et.getCategory(categoryIdent).deleteItem(ItemIdent);
       }
@@ -384,4 +401,28 @@ void App::deleteCategory(const cxxopts::ParseResult &args, ExpenseTracker &et) {
     }
   }
   
+}
+
+void App::sumCategory(const cxxopts::ParseResult &args, ExpenseTracker &et) {
+  std::string categoryIdent;
+  double totalSum = 0;
+
+  try {
+    categoryIdent = args[categoryStr].as<std::string>();
+  } catch (...) {
+  }
+  
+
+  if (categoryIdent.empty()) {
+    //get the sum of all categories
+    totalSum = et.getSum();
+
+  } else {
+    //get the sum of a category
+    totalSum = et.getCategory(categoryIdent).getSum();
+  }
+  
+  //round the total and output it
+  totalSum = round(totalSum * 100) / 100;
+  std::cout << totalSum;
 }

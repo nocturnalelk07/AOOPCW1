@@ -143,7 +143,22 @@ Item& Category::getItem(const std::string &identifier) {
             return items[i];
         }
     }
-    throw std::out_of_range(categoryOOR);
+
+    /**options that print the right thing
+     * prints the right thing but doesnt pass tests because program exits
+     * std::cerr << std::out_of_range(invalidItemError).what();
+            exit(1);
+        
+        prints the right thing but doesnt pass test because doesn't throw an exception
+        std::cerr << std::out_of_range(invalidItemError).what();
+
+        prints the right thing, plus the throw message. passes tests but prints too much text for output test
+        std::cerr << std::out_of_range(invalidItemError).what();
+        throw std::out_of_range(invalidItemError).what();
+     */
+    
+     //this passes the test but not the outputs
+    throw std::out_of_range(invalidItemError);
 }
 
 // DONE Write a function, getSum, that returns the sum of all Item amounts in
